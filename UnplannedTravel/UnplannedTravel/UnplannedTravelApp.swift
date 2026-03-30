@@ -11,11 +11,8 @@ import SwiftData
 @main
 struct UnplannedTravelApp: App {
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
+        let schema = Schema([Plan.self, Etapa.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {

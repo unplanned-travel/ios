@@ -5,14 +5,6 @@
 //  Created by Ion Jaureguialzo Sarasola on 30/03/2026.
 //
 
-import Foundation
-import SwiftData
+// This file is intentionally empty.
+// The domain models are Plan.swift and Etapa.swift.
 
-@Model
-final class Item {
-    var timestamp: Date
-    
-    init(timestamp: Date) {
-        self.timestamp = timestamp
-    }
-}
