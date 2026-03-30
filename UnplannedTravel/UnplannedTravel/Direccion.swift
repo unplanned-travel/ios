@@ -7,6 +7,7 @@ struct Direccion: Codable, Equatable {
     var pais: String = ""
     var latitud: Double?
     var longitud: Double?
+    var radioMetros: Double?            // Camera radius when the location was confirmed (hidden from UI)
 
     var resumen: String {
         let partes = [descripcion, direccionCompleta.isEmpty ? ciudad : direccionCompleta, pais]

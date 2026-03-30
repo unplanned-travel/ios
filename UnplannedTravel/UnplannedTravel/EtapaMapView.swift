@@ -89,56 +89,49 @@ struct EtapaMapView: View {
         let detalle: String
         let coordenada: CLLocationCoordinate2D
         let sistemaIcono: String
+        let radioMetros: Double?
+    }
+
+    private func punto(id: String, dir: Direccion, icono: String) -> Punto {
+        Punto(
+            id: id,
+            nombre: dir.descripcion.isEmpty ? (dir.ciudad.isEmpty ? id : dir.ciudad) : dir.descripcion,
+            detalle: dir.direccionCompleta.isEmpty
+                ? [dir.ciudad, dir.pais].filter { !$0.isEmpty }.joined(separator: ", ")
+                : dir.direccionCompleta,
+            coordenada: CLLocationCoordinate2D(latitude: dir.latitud!, longitude: dir.longitud!),
+            sistemaIcono: icono,
+            radioMetros: dir.radioMetros
+        )
     }
 
     private var anotaciones: [Punto] {
         var result: [Punto] = []
         if etapa.tipo.esTransporte {
             if let d = etapa.origen, d.tieneCoordenadas {
-                result.append(Punto(
-                    id: "origen",
-                    nombre: d.descripcion.isEmpty ? (d.ciudad.isEmpty ? "Origen" : d.ciudad) : d.descripcion,
-                    detalle: d.direccionCompleta.isEmpty
-                        ? [d.ciudad, d.pais].filter { !$0.isEmpty }.joined(separator: ", ")
-                        : d.direccionCompleta,
-                    coordenada: CLLocationCoordinate2D(latitude: d.latitud!, longitude: d.longitud!),
-                    sistemaIcono: "arrow.up.right.circle"
-                ))
+                result.append(punto(id: "origen", dir: d, icono: "arrow.up.right.circle"))
             }
             if let d = etapa.destino, d.tieneCoordenadas {
-                result.append(Punto(
-                    id: "destino",
-                    nombre: d.descripcion.isEmpty ? (d.ciudad.isEmpty ? "Destino" : d.ciudad) : d.descripcion,
-                    detalle: d.direccionCompleta.isEmpty
-                        ? [d.ciudad, d.pais].filter { !$0.isEmpty }.joined(separator: ", ")
-                        : d.direccionCompleta,
-                    coordenada: CLLocationCoordinate2D(latitude: d.latitud!, longitude: d.longitud!),
-                    sistemaIcono: "arrow.down.left.circle"
-                ))
+                result.append(punto(id: "destino", dir: d, icono: "arrow.down.left.circle"))
             }
         } else if let d = etapa.direccion, d.tieneCoordenadas {
-            result.append(Punto(
-                id: "lugar",
-                nombre: d.descripcion.isEmpty ? (d.ciudad.isEmpty ? etapa.tipo.nombre : d.ciudad) : d.descripcion,
-                detalle: d.direccionCompleta.isEmpty
-                    ? [d.ciudad, d.pais].filter { !$0.isEmpty }.joined(separator: ", ")
-                    : d.direccionCompleta,
-                coordenada: CLLocationCoordinate2D(latitude: d.latitud!, longitude: d.longitud!),
-                sistemaIcono: "mappin.circle"
-            ))
+            result.append(punto(id: "lugar", dir: d, icono: "mappin.circle"))
         }
         return result
     }
 
     // MARK: - Camera
 
+    private static let radioDefecto: Double = 400
+
     private var camaraInicial: MapCameraPosition {
         guard !anotaciones.isEmpty else { return .automatic }
-        if anotaciones.count == 1 {
+        if anotaciones.count == 1, let p = anotaciones.first {
+            let radio = p.radioMetros ?? Self.radioDefecto
             return .region(MKCoordinateRegion(
-                center: anotaciones[0].coordenada,
-                latitudinalMeters: 800,
-                longitudinalMeters: 800
+                center: p.coordenada,
+                latitudinalMeters: radio,
+                longitudinalMeters: radio
             ))
         }
         let lats = anotaciones.map(\.coordenada.latitude)

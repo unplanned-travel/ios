@@ -338,6 +338,23 @@
         }
       }
     },
+    "Coordinates saved" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coordenadas guardadas"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koordenatuak gordeta"
+          }
+        }
+      }
+    },
     "Cost" : {
       "localizations" : {
         "es" : {
@@ -676,6 +693,22 @@
         }
       }
     },
+    "Full address" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dirección completa"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Helbide osoa"
+          }
+        }
+      }
+    },
     "Generated with Unplanned" : {
       "localizations" : {
         "es" : {
@@ -788,6 +821,24 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud beharrezkoa da"
+          }
+        }
+      }
+    },
+    "Lat" : {
+      "comment" : "Label for latitude/longitude display",
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coord."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koordenat."
           }
         }
       }
@@ -1006,25 +1057,6 @@
         }
       }
     },
-    "Full address" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dirección completa" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Helbide osoa" } }
-      }
-    },
-    "Coordinates saved" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Coordenadas guardadas" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Koordenatuak gordeta" } }
-      }
-    },
-    "Lat" : {
-      "comment" : "Label for latitude/longitude display",
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Coord." } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Koordenat." } }
-      }
-    },
     "Place name" : {
       "localizations" : {
         "es" : {
@@ -1138,12 +1170,6 @@
         }
       }
     },
-    "Show on map" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mostrar en el mapa" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Erakutsi mapan" } }
-      }
-    },
     "Search on map" : {
       "localizations" : {
         "es" : {
@@ -1207,6 +1233,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hautatutako kokapena"
+          }
+        }
+      }
+    },
+    "Show on map" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mostrar en el mapa"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erakutsi mapan"
           }
         }
       }

@@ -13,18 +13,22 @@ struct MapPickerView: View {
     @State private var searchTask: Task<Void, Never>?
     @State private var featureSeleccionada: MapFeature?
     @State private var buscandoPOI = false
+    @State private var radioActual: Double = 400   // tracks live camera radius (meters)
     @StateObject private var locationManager = LocationManager()
+
+    private static let radioDefecto: Double = 400
 
     init(direccion: Binding<Direccion>) {
         _direccion = direccion
-        // If coordinates already exist, open centered on them; otherwise automatic.
-        if let lat = direccion.wrappedValue.latitud,
-           let lon = direccion.wrappedValue.longitud {
+        let d = direccion.wrappedValue
+        if let lat = d.latitud, let lon = d.longitud {
+            let radio = d.radioMetros ?? MapPickerView.radioDefecto
             _position = State(initialValue: .region(MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
-                latitudinalMeters: 500,
-                longitudinalMeters: 500
+                latitudinalMeters: radio,
+                longitudinalMeters: radio
             )))
+            _radioActual = State(initialValue: radio)
         } else {
             _position = State(initialValue: .automatic)
         }
@@ -68,6 +72,10 @@ struct MapPickerView: View {
             .onChange(of: featureSeleccionada) { _, feature in
                 guard let feature else { return }
                 resolverFeature(feature)
+            }
+            .onMapCameraChange(frequency: .onEnd) { context in
+                // latitudeDelta * 111_000 ≈ vertical meters visible; use as radius
+                radioActual = context.region.span.latitudeDelta * 111_000
             }
             .searchable(
                 text: $searchText,
@@ -215,6 +223,7 @@ struct MapPickerView: View {
         direccion.pais = p.country ?? ""
         direccion.latitud = p.coordinate.latitude
         direccion.longitud = p.coordinate.longitude
+        direccion.radioMetros = radioActual
         dismiss()
     }
 
