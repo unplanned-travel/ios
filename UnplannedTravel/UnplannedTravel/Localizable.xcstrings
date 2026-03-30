@@ -1168,6 +1168,12 @@
         }
       }
     },
+    "Use this location" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Usar esta ubicación" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Erabili kokapen hau" } }
+      }
+    },
     "Selected location" : {
       "extractionState" : "stale",
       "localizations" : {

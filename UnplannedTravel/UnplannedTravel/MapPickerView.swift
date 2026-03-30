@@ -11,11 +11,13 @@ struct MapPickerView: View {
     @State private var suggestions: [MKMapItem] = []
     @State private var selectedItem: MKMapItem?
     @State private var searchTask: Task<Void, Never>?
+    @State private var featureSeleccionada: MapFeature?
+    @State private var buscandoPOI = false
     @StateObject private var locationManager = LocationManager()
 
     var body: some View {
         NavigationStack {
-            Map(position: $position) {
+            Map(position: $position, selection: $featureSeleccionada) {
                 UserAnnotation()
                 if let item = selectedItem {
                     Marker(item: item)
@@ -36,6 +38,10 @@ struct MapPickerView: View {
                         longitudinalMeters: 400
                     ))
                 }
+            }
+            .onChange(of: featureSeleccionada) { _, feature in
+                guard let feature else { return }
+                resolverFeature(feature)
             }
             .searchable(
                 text: $searchText,
@@ -76,25 +82,68 @@ struct MapPickerView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if let item = selectedItem {
+                if buscandoPOI {
+                    ProgressView()
+                        .padding()
+                        .background(.regularMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .padding(.bottom, 8)
+                        .transition(.opacity)
+                } else if let item = selectedItem {
                     tarjetaItem(item)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
-            .animation(.spring(duration: 0.3), value: selectedItem != nil)
+            .animation(.spring(duration: 0.3), value: selectedItem?.name)
+            .animation(.spring(duration: 0.2), value: buscandoPOI)
             .navigationTitle("Select location")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Select") { aplicar() }
-                        .disabled(selectedItem == nil)
-                        .bold()
-                }
             }
         }
+    }
+
+    // MARK: - POI tap resolution
+
+    /// Converts a tapped MapFeature to an MKMapItem via local search.
+    private func resolverFeature(_ feature: MapFeature) {
+        buscandoPOI = true
+        selectedItem = nil
+
+        Task {
+            let request = MKLocalSearch.Request()
+            request.naturalLanguageQuery = feature.title
+            request.region = MKCoordinateRegion(
+                center: feature.coordinate,
+                latitudinalMeters: 150,
+                longitudinalMeters: 150
+            )
+            request.resultTypes = .pointOfInterest
+
+            if let response = try? await MKLocalSearch(request: request).start(),
+               let match = response.mapItems.min(by: {
+                   distancia($0.placemark.coordinate, feature.coordinate) <
+                   distancia($1.placemark.coordinate, feature.coordinate)
+               }) {
+                seleccionar(match)
+            } else {
+                // Fallback: build a minimal item from the feature itself
+                let placemark = MKPlacemark(coordinate: feature.coordinate)
+                let item = MKMapItem(placemark: placemark)
+                item.name = feature.title
+                seleccionar(item)
+            }
+            buscandoPOI = false
+        }
+    }
+
+    private func distancia(_ a: CLLocationCoordinate2D, _ b: CLLocationCoordinate2D) -> Double {
+        let la = CLLocation(latitude: a.latitude, longitude: a.longitude)
+        let lb = CLLocation(latitude: b.latitude, longitude: b.longitude)
+        return la.distance(from: lb)
     }
 
     // MARK: - Search
@@ -107,7 +156,6 @@ struct MapPickerView: View {
         MKLocalSearch(request: request).start { response, _ in
             guard let response else { return }
             suggestions = Array(response.mapItems.prefix(8))
-            // If only one result, select it automatically.
             if response.mapItems.count == 1, let first = response.mapItems.first {
                 seleccionar(first)
             } else {
@@ -120,13 +168,14 @@ struct MapPickerView: View {
 
     private func seleccionar(_ item: MKMapItem) {
         selectedItem = item
+        featureSeleccionada = nil
         searchText = item.name ?? ""
         suggestions = []
         if let coord = item.placemark.location?.coordinate {
             position = .region(MKCoordinateRegion(
                 center: coord,
-                latitudinalMeters: 600,
-                longitudinalMeters: 600
+                latitudinalMeters: 500,
+                longitudinalMeters: 500
             ))
         }
     }
@@ -146,25 +195,60 @@ struct MapPickerView: View {
 
     @ViewBuilder
     private func tarjetaItem(_ item: MKMapItem) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: "mappin.circle.fill")
-                .font(.title2)
-                .foregroundStyle(.red)
-            VStack(alignment: .leading, spacing: 3) {
-                Text(item.name ?? "Selected location")
-                    .font(.headline)
-                let partes = [
-                    item.placemark.thoroughfare,
-                    item.placemark.locality,
-                    item.placemark.country
-                ].compactMap { $0 }.joined(separator: ", ")
-                if !partes.isEmpty {
-                    Text(partes)
-                        .font(.caption)
+        VStack(alignment: .leading, spacing: 10) {
+            // Header
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: icono(para: item))
+                    .font(.title2)
+                    .foregroundStyle(.red)
+                    .frame(width: 32)
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(item.name ?? "Selected location")
+                        .font(.headline)
+
+                    let partes = [
+                        item.placemark.thoroughfare,
+                        item.placemark.locality,
+                        item.placemark.country
+                    ].compactMap { $0 }.joined(separator: ", ")
+                    if !partes.isEmpty {
+                        Text(partes)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                Spacer()
+                // Deselect
+                Button {
+                    selectedItem = nil
+                    featureSeleccionada = nil
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(.secondary)
                 }
             }
-            Spacer()
+
+            // Extra info
+            if let phone = item.phoneNumber, !phone.isEmpty {
+                Label(phone, systemImage: "phone")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            if let url = item.url {
+                Label(url.host ?? url.absoluteString, systemImage: "globe")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+
+            // Action button
+            Button(action: aplicar) {
+                Label("Use this location", systemImage: "checkmark.circle.fill")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+            }
+            .buttonStyle(.borderedProminent)
         }
         .padding()
         .background(.regularMaterial)
