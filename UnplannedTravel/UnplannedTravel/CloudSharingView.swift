@@ -22,13 +22,31 @@ struct CloudSharingView: UIViewControllerRepresentable {
 
     // MARK: - Container VC
 
-    /// A plain UIViewController that presents UICloudSharingController once it appears.
+    /// Saves the CKShare first, then presents UICloudSharingController(share:container:).
+    /// Using the preparationHandler form causes "No optionsGroups" errors because CloudKit
+    /// expects the share to NOT be pre-saved when that initializer is used.
     final class ContainerVC: UIViewController {
         weak var coordinator: Coordinator?
 
         override func viewDidAppear(_ animated: Bool) {
             super.viewDidAppear(animated)
-            coordinator?.presentSharingController(from: self)
+            guard let coordinator, !coordinator.presented else { return }
+            coordinator.presented = true
+
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    let (_, share) = try await coordinator.store.prepararShare(para: coordinator.plan)
+                    let container = CKContainer(identifier: CloudKitStore.containerID)
+                    let csc = UICloudSharingController(share: share, container: container)
+                    csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
+                    csc.delegate = coordinator
+                    self.present(csc, animated: true)
+                } catch {
+                    print("[CloudKit] prepararShare falló: \(error.localizedDescription)")
+                    coordinator.dismiss()
+                }
+            }
         }
     }
 
@@ -38,33 +56,12 @@ struct CloudSharingView: UIViewControllerRepresentable {
         let store: CloudKitStore
         let plan: Plan
         let dismiss: DismissAction
-        private var presented = false
+        var presented = false
 
         init(store: CloudKitStore, plan: Plan, dismiss: DismissAction) {
             self.store = store
             self.plan = plan
             self.dismiss = dismiss
-        }
-
-        func presentSharingController(from vc: UIViewController) {
-            guard !presented else { return }
-            presented = true
-
-            let csc = UICloudSharingController { [weak self] _, completion in
-                guard let self else { return }
-                Task { @MainActor in
-                    do {
-                        let (_, share) = try await self.store.prepararShare(para: self.plan)
-                        let container = CKContainer(identifier: CloudKitStore.containerID)
-                        completion(share, container, nil)
-                    } catch {
-                        completion(nil, nil, error)
-                    }
-                }
-            }
-            csc.availablePermissions = [.allowReadOnly, .allowReadWrite, .allowPrivate]
-            csc.delegate = self
-            vc.present(csc, animated: true)
         }
 
         func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
