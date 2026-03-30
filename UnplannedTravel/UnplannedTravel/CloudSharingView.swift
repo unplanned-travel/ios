@@ -57,10 +57,20 @@ struct CloudSharingView: UIViewControllerRepresentable {
                     csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
                     csc.delegate = coordinator
                     self.present(csc, animated: true)
+                    coordinator.sharingPresented = true
                 } catch {
                     print("[CloudKit] Error preparando share: \(error.localizedDescription)")
                     coordinator.dismiss()
                 }
+            }
+        }
+
+        // Called when UICloudSharingController is dismissed without triggering a delegate method
+        // (e.g. tapping "Done"/"Cancel"). Close the outer SwiftUI sheet too.
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            if coordinator?.sharingPresented == true {
+                coordinator?.dismiss()
             }
         }
     }
@@ -72,6 +82,7 @@ struct CloudSharingView: UIViewControllerRepresentable {
         let plan: Plan
         let dismiss: DismissAction
         var presented = false
+        var sharingPresented = false
 
         init(store: CloudKitStore, plan: Plan, dismiss: DismissAction) {
             self.store = store
