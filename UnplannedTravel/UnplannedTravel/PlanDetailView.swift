@@ -13,6 +13,9 @@ struct PlanDetailView: View {
     @State private var generandoPDF = false
     @State private var urlPDF: URL?
     @State private var mostrarCompartir = false
+    @State private var mostrarCompartirICloud = false
+    @State private var sincronizando = false
+    @State private var errorSync: String?
 
     var body: some View {
         List {
@@ -47,6 +50,13 @@ struct PlanDetailView: View {
                 Button { mostrarEditarPlan = true } label: {
                     Image(systemName: "pencil")
                 }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                // iCloud sharing button
+                Button { mostrarCompartirICloud = true } label: {
+                    Image(systemName: plan.estaCompartido ? "person.2.fill" : "person.badge.plus")
+                }
+                .disabled(plan.etapas.isEmpty)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -97,6 +107,9 @@ struct PlanDetailView: View {
         }
         .sheet(item: $etapaParaMapa) { etapa in
             EtapaMapView(etapa: etapa)
+        }
+        .sheet(isPresented: $mostrarCompartirICloud) {
+            CloudSharingView(plan: plan)
         }
         .sheet(isPresented: $mostrarCompartir) {
             if let url = urlPDF {

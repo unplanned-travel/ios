@@ -10,6 +10,11 @@ import SwiftData
     @Relationship(deleteRule: .cascade, inverse: \Etapa.plan)
     var etapas: [Etapa] = []
 
+    /// CloudKit record identifier used to sync this plan to the shared database.
+    var cloudKitRecordID: String?
+    /// True once a CKShare has been created for this plan.
+    var estaCompartido: Bool = false
+
     init(titulo: String = "", fechaInicio: Date? = nil, fechaFin: Date? = nil, notas: String? = nil) {
         self.titulo = titulo
         self.fechaInicio = fechaInicio

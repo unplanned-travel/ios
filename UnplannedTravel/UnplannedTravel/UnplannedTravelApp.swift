@@ -10,9 +10,14 @@ import SwiftData
 
 @main
 struct UnplannedTravelApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([Plan.self, Etapa.self])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false,
+            cloudKitDatabase: .private("iCloud.com.jaureguialzo.UnplannedTravel")
+        )
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {

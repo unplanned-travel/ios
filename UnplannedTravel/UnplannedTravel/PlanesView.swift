@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import CloudKit
 
 struct PlanesView: View {
     @Environment(\.modelContext) private var modelContext
@@ -8,6 +9,7 @@ struct PlanesView: View {
     @State private var mostrarNuevoPlan = false
     @State private var urlPDF: URL?
     @State private var mostrarCompartir = false
+    @State private var errorImport: String?
 
     var body: some View {
         NavigationStack {
@@ -56,6 +58,27 @@ struct PlanesView: View {
                 ShareSheet(items: [url])
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .cloudKitShareAccepted)) { notification in
+            guard let metadata = notification.object as? CKShare.Metadata else { return }
+            Task { @MainActor in
+                do {
+                    try await CloudKitManager.shared.aceptarYImportar(
+                        metadata: metadata,
+                        en: modelContext
+                    )
+                } catch {
+                    errorImport = error.localizedDescription
+                }
+            }
+        }
+        .alert("Error al aceptar la invitación", isPresented: Binding(
+            get: { errorImport != nil },
+            set: { if !$0 { errorImport = nil } }
+        )) {
+            Button("Aceptar", role: .cancel) {}
+        } message: {
+            Text(errorImport ?? "")
+        }
     }
 
     private func eliminarPlanes(at offsets: IndexSet) {
@@ -77,6 +100,11 @@ struct PlanRowView: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
+                if plan.estaCompartido {
+                    Image(systemName: "person.2.fill")
+                        .font(.caption)
+                        .foregroundStyle(.blue)
+                }
                 if !plan.etapas.isEmpty {
                     Text("\(plan.etapas.count) etapas")
                         .font(.caption)
