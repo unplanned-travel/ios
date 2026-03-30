@@ -125,6 +125,8 @@ struct MapPickerView: View {
         direccion.descripcion = item.name ?? p.name ?? ""
         direccion.ciudad = p.locality ?? p.administrativeArea ?? ""
         direccion.pais = p.country ?? ""
+        direccion.latitud = p.coordinate.latitude
+        direccion.longitud = p.coordinate.longitude
         dismiss()
     }
 

@@ -38,6 +38,14 @@ import SwiftData
         self.fechaInicio = fechaInicio
     }
 
+    /// True when the etapa has at least one geocoded location to show on a map.
+    var tieneUbicacion: Bool {
+        if tipo.esTransporte {
+            return origen?.tieneCoordenadas == true || destino?.tieneCoordenadas == true
+        }
+        return direccion?.tieneCoordenadas == true
+    }
+
     /// Human-readable label shown in list rows.
     var etiqueta: String {
         switch tipo {

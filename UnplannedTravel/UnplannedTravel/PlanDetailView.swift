@@ -9,6 +9,7 @@ struct PlanDetailView: View {
     @State private var mostrarEditarPlan = false
     @State private var etapaParaCrear: Etapa?
     @State private var etapaParaEditar: Etapa?
+    @State private var etapaParaMapa: Etapa?
 
     var body: some View {
         List {
@@ -19,6 +20,20 @@ struct PlanDetailView: View {
                     EtapaRowView(etapa: etapa)
                 }
                 .buttonStyle(.plain)
+                .contextMenu {
+                    if etapa.tieneUbicacion {
+                        Button {
+                            etapaParaMapa = etapa
+                        } label: {
+                            Label("Ver en el mapa", systemImage: "map")
+                        }
+                    }
+                    Button {
+                        etapaParaEditar = etapa
+                    } label: {
+                        Label("Editar", systemImage: "pencil")
+                    }
+                }
             }
             .onDelete(perform: eliminarEtapas)
         }
@@ -61,6 +76,9 @@ struct PlanDetailView: View {
         }
         .sheet(item: $etapaParaEditar) { etapa in
             EtapaFormView(etapa: etapa, esNueva: false)
+        }
+        .sheet(item: $etapaParaMapa) { etapa in
+            EtapaMapView(etapa: etapa)
         }
         .sheet(isPresented: $mostrarEditarPlan) {
             PlanFormView(plan: plan)
