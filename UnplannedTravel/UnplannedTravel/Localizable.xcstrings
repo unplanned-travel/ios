@@ -354,6 +354,23 @@
         }
       }
     },
+    "Could not determine iCloud account status. Check your connection." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo determinar el estado de iCloud. Comprueba tu conexión."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ezin izan da iCloud egoera zehaztu. Egiaztatu konexioa."
+          }
+        }
+      }
+    },
     "Country" : {
       "localizations" : {
         "es" : {
@@ -708,6 +725,73 @@
         }
       }
     },
+    "iCloud access is restricted on this device." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El acceso a iCloud está restringido en este dispositivo."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud-erako sarbidea mugatua da gailu honetan."
+          }
+        }
+      }
+    },
+    "iCloud account is not available." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La cuenta de iCloud no está disponible."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud kontua ez dago eskuragarri."
+          }
+        }
+      }
+    },
+    "iCloud is temporarily unavailable. Try again later." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud no está disponible temporalmente. Inténtalo de nuevo más tarde."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud ez dago eskuragarri momentuz. Saiatu berriro geroago."
+          }
+        }
+      }
+    },
+    "iCloud Required" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud necesario"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud beharrezkoa da"
+          }
+        }
+      }
+    },
     "Moneda" : {
 
     },
@@ -776,43 +860,6 @@
         }
       }
     },
-    "iCloud Required" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "iCloud necesario" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "iCloud beharrezkoa da" } }
-      }
-    },
-    "Sign in to iCloud in Settings to use Unplanned." : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Inicia sesión en iCloud en Ajustes para usar Unplanned." } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hasi saioa iCloud-en Ezarpenetan Unplanned erabiltzeko." } }
-      }
-    },
-    "iCloud access is restricted on this device." : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "El acceso a iCloud está restringido en este dispositivo." } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "iCloud-erako sarbidea mugatua da gailu honetan." } }
-      }
-    },
-    "Could not determine iCloud account status. Check your connection." : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "No se pudo determinar el estado de iCloud. Comprueba tu conexión." } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Ezin izan da iCloud egoera zehaztu. Egiaztatu konexioa." } }
-      }
-    },
-    "iCloud is temporarily unavailable. Try again later." : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "iCloud no está disponible temporalmente. Inténtalo de nuevo más tarde." } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "iCloud ez dago eskuragarri momentuz. Saiatu berriro geroago." } }
-      }
-    },
-    "iCloud account is not available." : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "La cuenta de iCloud no está disponible." } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "iCloud kontua ez dago eskuragarri." } }
-      }
-    },
-
     "No plans" : {
       "localizations" : {
         "es" : {
@@ -1134,6 +1181,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hautatutako kokapena"
+          }
+        }
+      }
+    },
+    "Sign in to iCloud in Settings to use Unplanned." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicia sesión en iCloud en Ajustes para usar Unplanned."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hasi saioa iCloud-en Ezarpenetan Unplanned erabiltzeko."
           }
         }
       }

@@ -137,42 +137,56 @@ final class CloudKitStore {
         cargando = true
         defer { cargando = false }
 
-        var todosPlanes: [Plan] = []
-        var todasEtapas: [Etapa] = []
+        // Clear state for a full reload
+        planRecords.removeAll()
+        etapaRecords.removeAll()
+        planes.removeAll()
+        etapasPorPlan.removeAll()
 
-        // Private database
-        do {
-            async let pr = fetchRecords(tipo: "Plan", db: privateDB, zoneID: Self.zona.zoneID)
-            async let er = fetchRecords(tipo: "Etapa", db: privateDB, zoneID: Self.zona.zoneID)
-            let planRecs = try await pr
-            let etapaRecs = try await er
-            planRecs.forEach { planRecords[$0.recordID] = $0 }
-            etapaRecs.forEach { etapaRecords[$0.recordID] = $0 }
-            todosPlanes += planRecs.map { Plan(from: $0, esPropio: true) }
-            todasEtapas += etapaRecs.map { Etapa(from: $0) }
-        } catch {
-            print("[CloudKit] Error private DB: \(error)")
-        }
+        // Private database: full zone fetch with nil token (no CKQuery needed)
+        await fetchTodosRegistros(zoneID: Self.zona.zoneID, db: privateDB, esPropio: true)
 
-        // Shared database
+        // Shared database: discover zones, then full fetch each
         do {
-            let zoneIDs = try await fetchSharedZoneIDs()
-            for zoneID in zoneIDs {
-                async let pr = fetchRecords(tipo: "Plan", db: sharedDB, zoneID: zoneID)
-                async let er = fetchRecords(tipo: "Etapa", db: sharedDB, zoneID: zoneID)
-                let planRecs = (try? await pr) ?? []
-                let etapaRecs = (try? await er) ?? []
-                planRecs.forEach { planRecords[$0.recordID] = $0 }
-                etapaRecs.forEach { etapaRecords[$0.recordID] = $0 }
-                todosPlanes += planRecs.map { Plan(from: $0, esPropio: false) }
-                todasEtapas += etapaRecs.map { Etapa(from: $0) }
+            let sharedZoneIDs = try await fetchSharedZoneIDs()
+            for zoneID in sharedZoneIDs {
+                await fetchTodosRegistros(zoneID: zoneID, db: sharedDB, esPropio: false)
             }
         } catch {
-            print("[CloudKit] Error shared DB: \(error)")
+            print("[CloudKit] Error fetching shared zones: \(error)")
         }
+    }
 
-        planes = todosPlanes.sorted { ($0.fechaInicio ?? .distantFuture) < ($1.fechaInicio ?? .distantFuture) }
-        etapasPorPlan = Dictionary(grouping: todasEtapas, by: { $0.planID })
+    /// Full fetch of all records in a zone using CKFetchRecordZoneChangesOperation
+    /// with nil token — works without any Queryable schema configuration.
+    private func fetchTodosRegistros(zoneID: CKRecordZone.ID, db: CKDatabase, esPropio: Bool) async {
+        do {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                var changed: [CKRecord] = []
+                let config = CKFetchRecordZoneChangesOperation.ZoneConfiguration(
+                    previousServerChangeToken: nil
+                )
+                let op = CKFetchRecordZoneChangesOperation(
+                    recordZoneIDs: [zoneID],
+                    configurationsByRecordZoneID: [zoneID: config]
+                )
+                op.recordWasChangedBlock = { _, result in
+                    if let record = try? result.get() { changed.append(record) }
+                }
+                op.fetchRecordZoneChangesResultBlock = { result in
+                    switch result {
+                    case .success:
+                        Task { @MainActor in self.aplicarCambios(changed, deleted: [], esPropio: esPropio) }
+                        continuation.resume()
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
+                }
+                db.add(op)
+            }
+        } catch {
+            print("[CloudKit] fetchTodosRegistros error: \(error)")
+        }
     }
 
     // MARK: - Helpers: etapas
@@ -462,20 +476,6 @@ final class CloudKitStore {
     }
 
     // MARK: - Fetch helpers
-
-    private func fetchRecords(tipo: String, db: CKDatabase, zoneID: CKRecordZone.ID) async throws -> [CKRecord] {
-        let query = CKQuery(recordType: tipo, predicate: NSPredicate(value: true))
-        var records: [CKRecord] = []
-        var cursor: CKQueryOperation.Cursor?
-        repeat {
-            let page = try await (cursor == nil
-                ? db.records(matching: query, inZoneWith: zoneID)
-                : db.records(continuingMatchFrom: cursor!))
-            records += page.matchResults.compactMap { try? $1.get() }
-            cursor = page.queryCursor
-        } while cursor != nil
-        return records
-    }
 
     private func fetchSharedZoneIDs() async throws -> [CKRecordZone.ID] {
         try await withCheckedThrowingContinuation { continuation in
