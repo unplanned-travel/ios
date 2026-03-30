@@ -274,12 +274,53 @@ extension EtapaFormView {
 struct DireccionSection: View {
     let titulo: String
     @Binding var direccion: Direccion
+    @State private var mostrarMapa = false
 
     var body: some View {
         Section(titulo) {
+            Button {
+                mostrarMapa = true
+            } label: {
+                Label("Buscar en el mapa", systemImage: "map")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
+            if !direccion.estaVacia {
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        if !direccion.descripcion.isEmpty {
+                            Text(direccion.descripcion)
+                                .font(.subheadline)
+                        }
+                        let lugar = [direccion.ciudad, direccion.pais]
+                            .filter { !$0.isEmpty }.joined(separator: ", ")
+                        if !lugar.isEmpty {
+                            Text(lugar)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Spacer()
+                    Button {
+                        direccion = Direccion()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+
+            // Manual entry as fallback.
             TextField("Nombre del lugar", text: $direccion.descripcion)
+                .font(.caption)
             TextField("Ciudad", text: $direccion.ciudad)
+                .font(.caption)
             TextField("País", text: $direccion.pais)
+                .font(.caption)
+        }
+        .sheet(isPresented: $mostrarMapa) {
+            MapPickerView(direccion: $direccion)
         }
     }
 }
