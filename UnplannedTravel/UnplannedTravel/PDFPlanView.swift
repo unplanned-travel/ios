@@ -1,11 +1,11 @@
 import SwiftUI
 
 /// Full-plan layout rendered to PDF via ImageRenderer.
-/// Fixed width of 612 pt (US Letter) so the output is always the same regardless of device screen.
+/// Fixed width of 595 pt (DIN A4 at 72 ppp) so the output is always the same regardless of device screen.
 struct PDFPlanView: View {
     let plan: Plan
 
-    static let anchoPagina: CGFloat = 612
+    static let anchoPagina: CGFloat = 595  // A4: 210 mm a 72 ppp
     static let margen: CGFloat = 48
 
     var body: some View {
