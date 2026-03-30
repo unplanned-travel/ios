@@ -3,8 +3,8 @@ import CloudKit
 import UIKit
 
 /// Wraps UICloudSharingController so it can be presented as a SwiftUI sheet.
-/// UICloudSharingController must be presented modally from a plain UIViewController;
-/// embedding it directly as the representable causes a blank page.
+/// UICloudSharingController must be presented from a real UIViewController in viewDidAppear
+/// to have a valid window, otherwise it renders blank.
 struct CloudSharingView: UIViewControllerRepresentable {
     @Environment(CloudKitStore.self) var store
     let plan: Plan
@@ -22,9 +22,6 @@ struct CloudSharingView: UIViewControllerRepresentable {
 
     // MARK: - Container VC
 
-    /// Saves the CKShare first, then presents UICloudSharingController(share:container:).
-    /// Using the preparationHandler form causes "No optionsGroups" errors because CloudKit
-    /// expects the share to NOT be pre-saved when that initializer is used.
     final class ContainerVC: UIViewController {
         weak var coordinator: Coordinator?
 
@@ -36,14 +33,32 @@ struct CloudSharingView: UIViewControllerRepresentable {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 do {
-                    let (_, share) = try await coordinator.store.prepararShare(para: coordinator.plan)
-                    let container = CKContainer(identifier: CloudKitStore.containerID)
-                    let csc = UICloudSharingController(share: share, container: container)
+                    let csc: UICloudSharingController
+                    if coordinator.store.tieneShareLocal(plan: coordinator.plan) {
+                        // Share already exists — use management initializer.
+                        guard let (share, container) = try await coordinator.store.fetchShareExistente(para: coordinator.plan) else {
+                            coordinator.dismiss(); return
+                        }
+                        csc = UICloudSharingController(share: share, container: container)
+                    } else {
+                        // No share yet — create it inside the preparationHandler.
+                        csc = UICloudSharingController { [weak coordinator] _, completion in
+                            guard let coordinator else { return }
+                            Task { @MainActor in
+                                do {
+                                    let (share, container) = try await coordinator.store.crearNuevoShare(para: coordinator.plan)
+                                    completion(share, container, nil)
+                                } catch {
+                                    completion(nil, nil, error)
+                                }
+                            }
+                        }
+                    }
                     csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
                     csc.delegate = coordinator
                     self.present(csc, animated: true)
                 } catch {
-                    print("[CloudKit] prepararShare falló: \(error.localizedDescription)")
+                    print("[CloudKit] Error preparando share: \(error.localizedDescription)")
                     coordinator.dismiss()
                 }
             }

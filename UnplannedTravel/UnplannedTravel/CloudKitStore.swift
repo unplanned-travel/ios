@@ -295,6 +295,38 @@ final class CloudKitStore {
 
     // MARK: - Sharing
 
+    func crearNuevoShare(para plan: Plan) async throws -> (CKShare, CKContainer) {
+        guard let record = planRecords[plan.id] else {
+            throw NSError(domain: "CloudKitStore", code: 1,
+                         userInfo: [NSLocalizedDescriptionKey: "Record not found in local cache"])
+        }
+        let share = CKShare(rootRecord: record)
+        share[CKShare.SystemFieldKey.title] = (plan.titulo.isEmpty ? "Trip" : plan.titulo) as CKRecordValue
+
+        let results = try await privateDB.modifyRecords(saving: [record, share], deleting: [])
+        let savedShare = results.saveResults.values.compactMap { try? $0.get() as? CKShare }.first ?? share
+
+        // Store the server-returned Plan record so record.share reference is set correctly.
+        if let savedRecord = try? results.saveResults[record.recordID]?.get() {
+            planRecords[plan.id] = savedRecord
+        }
+        if let idx = planes.firstIndex(where: { $0.id == plan.id }) {
+            planes[idx].estaCompartido = true
+        }
+        return (savedShare, CKContainer(identifier: Self.containerID))
+    }
+
+    func fetchShareExistente(para plan: Plan) async throws -> (CKShare, CKContainer)? {
+        guard let record = planRecords[plan.id],
+              let shareRef = record.share,
+              let share = try? await privateDB.record(for: shareRef.recordID) as? CKShare else { return nil }
+        return (share, CKContainer(identifier: Self.containerID))
+    }
+
+    func tieneShareLocal(plan: Plan) -> Bool {
+        planRecords[plan.id]?.share != nil
+    }
+
     func prepararShare(para plan: Plan) async throws -> (CKRecord, CKShare) {
         guard let record = planRecords[plan.id] else {
             throw NSError(domain: "CloudKitStore", code: 1,
@@ -307,19 +339,9 @@ final class CloudKitStore {
             return (record, existingShare)
         }
 
-        let share = CKShare(rootRecord: record)
-        share[CKShare.SystemFieldKey.title] = (plan.titulo.isEmpty ? "Trip" : plan.titulo) as CKRecordValue
-        share.publicPermission = .none
-
-        let results = try await privateDB.modifyRecords(saving: [record, share], deleting: [])
-        let savedShare = results.saveResults.values.compactMap { try? $0.get() as? CKShare }.first ?? share
-        planRecords[plan.id] = record
-
-        if let idx = planes.firstIndex(where: { $0.id == plan.id }) {
-            planes[idx].estaCompartido = true
-        }
-
-        return (record, savedShare)
+        let (savedShare, _) = try await crearNuevoShare(para: plan)
+        let updatedRecord = planRecords[plan.id] ?? record
+        return (updatedRecord, savedShare)
     }
 
     func aceptarShare(metadata: CKShare.Metadata) async throws {
