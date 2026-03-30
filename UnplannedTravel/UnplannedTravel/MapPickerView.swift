@@ -1,5 +1,6 @@
 import SwiftUI
 import MapKit
+import CoreLocation
 
 struct MapPickerView: View {
     @Binding var direccion: Direccion
@@ -10,10 +11,12 @@ struct MapPickerView: View {
     @State private var suggestions: [MKMapItem] = []
     @State private var selectedItem: MKMapItem?
     @State private var searchTask: Task<Void, Never>?
+    @StateObject private var locationManager = LocationManager()
 
     var body: some View {
         NavigationStack {
             Map(position: $position) {
+                UserAnnotation()
                 if let item = selectedItem {
                     Marker(item: item)
                         .tint(.red)
@@ -24,6 +27,15 @@ struct MapPickerView: View {
                 MapUserLocationButton()
                 MapCompass()
                 MapScaleView()
+            }
+            .task {
+                locationManager.requestLocation { coordinate in
+                    position = .region(MKCoordinateRegion(
+                        center: coordinate,
+                        latitudinalMeters: 400,
+                        longitudinalMeters: 400
+                    ))
+                }
             }
             .searchable(
                 text: $searchText,
