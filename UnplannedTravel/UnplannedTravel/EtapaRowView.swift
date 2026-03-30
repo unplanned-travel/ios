@@ -18,11 +18,6 @@ struct EtapaRowView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     Spacer()
-                    if etapa.tieneUbicacion {
-                        Image(systemName: "mappin")
-                            .font(.caption)
-                            .foregroundStyle(.tertiary)
-                    }
                     if let coste = etapa.coste, coste.total > 0 {
                         Text(formatCoste(coste))
                             .font(.subheadline)
