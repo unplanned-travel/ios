@@ -21,6 +21,7 @@ final class CloudKitStore {
     var etapasPorPlan: [CKRecord.ID: [Etapa]] = [:]
     var cargando = false
     var errorMensaje: String?
+    var cuentaDisponible = false
 
     // MARK: - CloudKit
 
@@ -76,11 +77,32 @@ final class CloudKitStore {
 
     func setup() async {
         do {
+            let status = try await ckContainer.accountStatus()
+            guard status == .available else {
+                errorMensaje = accountStatusMessage(status)
+                return
+            }
+            cuentaDisponible = true
             try await crearZona()
             try await registrarSuscripciones()
             await cargarDatos()
         } catch {
             errorMensaje = error.localizedDescription
+        }
+    }
+
+    private func accountStatusMessage(_ status: CKAccountStatus) -> String {
+        switch status {
+        case .noAccount:
+            return "Sign in to iCloud in Settings to use Unplanned."
+        case .restricted:
+            return "iCloud access is restricted on this device."
+        case .couldNotDetermine:
+            return "Could not determine iCloud account status. Check your connection."
+        case .temporarilyUnavailable:
+            return "iCloud is temporarily unavailable. Try again later."
+        default:
+            return "iCloud account is not available."
         }
     }
 

@@ -3,17 +3,62 @@
   "strings" : {
     "CFBundleDisplayName" : {
       "comment" : "App display name",
+      "extractionState" : "stale",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unplanned" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Unplanned" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Unplanned" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unplanned"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unplanned"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unplanned"
+          }
+        }
+      }
+    },
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "UnplannedTravel"
+          }
+        }
       }
     },
     "NSLocationWhenInUseUsageDescription" : {
       "comment" : "Location permission prompt",
+      "extractionState" : "extracted_with_value",
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Se usa tu ubicación para centrar el mapa y facilitar la búsqueda de lugares cercanos." } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Zure kokapena mapa zentratzeko eta inguruko lekuak bilatzeko erabiltzen da." } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Your location is used to center the map and help find nearby places."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Se usa tu ubicación para centrar el mapa y facilitar la búsqueda de lugares cercanos."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Zure kokapena mapa zentratzeko eta inguruko lekuak bilatzeko erabiltzen da."
+          }
+        }
       }
     }
   },

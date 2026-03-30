@@ -46,7 +46,13 @@ struct PlanesView: View {
                 }
             }
             .overlay {
-                if store.planes.isEmpty && !store.cargando {
+                if !store.cuentaDisponible, let msg = store.errorMensaje {
+                    ContentUnavailableView(
+                        "iCloud Required",
+                        systemImage: "icloud.slash",
+                        description: Text(msg)
+                    )
+                } else if store.planes.isEmpty && !store.cargando {
                     ContentUnavailableView(
                         "No plans",
                         systemImage: "map",

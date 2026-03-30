@@ -1,627 +1,1787 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
 
-    "tipo.vuelo" : {
-      "comment" : "Stage type: flight",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Flight" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vuelo" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hegaldia" } }
-      }
     },
-    "tipo.hotel" : {
-      "comment" : "Stage type: hotel",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Hotel" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hotel" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hotela" } }
-      }
-    },
-    "tipo.coche" : {
-      "comment" : "Stage type: car",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Car" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Coche" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Autoa" } }
-      }
-    },
-    "tipo.taxi" : {
-      "comment" : "Stage type: taxi",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Taxi" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Taxi" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Taxia" } }
-      }
-    },
-    "tipo.bus" : {
-      "comment" : "Stage type: bus",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Bus" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Bus" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Autobusa" } }
-      }
-    },
-    "tipo.tren" : {
-      "comment" : "Stage type: train",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Train" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Tren" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Trena" } }
-      }
-    },
-    "tipo.metro" : {
-      "comment" : "Stage type: subway",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Metro" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Metro" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Metroa" } }
-      }
-    },
-    "tipo.barco" : {
-      "comment" : "Stage type: ferry",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Ferry" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Barco" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Itsasontzia" } }
-      }
-    },
-    "tipo.restaurante" : {
-      "comment" : "Stage type: restaurant",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Restaurant" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Restaurante" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Jatetxea" } }
-      }
-    },
-    "tipo.bar" : {
-      "comment" : "Stage type: pub and bar",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Pub & Bar" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Pub & Bar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Pub & Barra" } }
-      }
-    },
-    "tipo.cafe" : {
-      "comment" : "Stage type: café",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Café" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Café" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Kafetegia" } }
-      }
-    },
-    "tipo.cine" : {
-      "comment" : "Stage type: cinema",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Cinema" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cine" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Zinema" } }
-      }
-    },
-    "tipo.teatro" : {
-      "comment" : "Stage type: theatre",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Theatre" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Teatro" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Antzokia" } }
-      }
-    },
-    "tipo.concierto" : {
-      "comment" : "Stage type: concert",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Concert" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Concierto" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Kontzertua" } }
-      }
-    },
-    "tipo.vidaNocturna" : {
-      "comment" : "Stage type: nightlife",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Nightlife" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vida nocturna" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Gaueko bizitza" } }
-      }
-    },
-    "tipo.visitaGuiada" : {
-      "comment" : "Stage type: guided tour",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Guided tour" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Visita guiada" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Bisita gidatua" } }
-      }
-    },
-    "tipo.museo" : {
-      "comment" : "Stage type: museum",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Museum" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Museo" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Museoa" } }
-      }
-    },
-    "tipo.compras" : {
-      "comment" : "Stage type: shopping",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Shopping" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Compras" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Erosketak" } }
-      }
-    },
-    "tipo.reunion" : {
-      "comment" : "Stage type: meeting",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Meeting" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reunión" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Bilera" } }
-      }
-    },
-    "tipo.deporte" : {
-      "comment" : "Stage type: sport",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Sport" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Deporte" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Kirola" } }
-      }
-    },
-    "tipo.actividad" : {
-      "comment" : "Stage type: activity",
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Activity" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Actividad" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Jarduera" } }
-      }
-    },
+    "0" : {
 
-    "categoria.vuelos" : {
-      "comment" : "Stage category: flights",
+    },
+    "Accept" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Flights" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Vuelos" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hegaldiak" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aceptar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onartu"
+          }
+        }
       }
     },
-    "categoria.alojamiento" : {
-      "comment" : "Stage category: accommodation",
+    "Add the first stage with the + button" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Accommodation" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Alojamiento" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Ostatua" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade la primera etapa con el botón +"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gehitu lehen etapa + botoiarekin"
+          }
+        }
       }
     },
-    "categoria.transporte" : {
-      "comment" : "Stage category: transport",
+    "Add your first trip with the + button" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Transport" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Transporte" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Garraioa" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade tu primer viaje con el botón +"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gehitu zure lehen bidaia + botoiarekin"
+          }
+        }
       }
     },
-    "categoria.foodAndDrink" : {
-      "comment" : "Stage category: food and drink",
+    "Address" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Food & Drink" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Comida y bebida" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Janaria eta edaria" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dirección"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Helbidea"
+          }
+        }
       }
     },
-    "categoria.ocio" : {
-      "comment" : "Stage category: entertainment",
+    "Arrival" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Entertainment" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ocio" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Aisia" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Llegada"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iristea"
+          }
+        }
+      }
+    },
+    "Booking" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reserva"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreserba"
+          }
+        }
+      }
+    },
+    "Booking notes" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notas de reserva"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreserba oharrak"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utzi"
+          }
+        }
       }
     },
     "categoria.actividades" : {
       "comment" : "Stage category: activities",
+      "extractionState" : "stale",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Activities" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Actividades" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Jarduerak" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activities"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actividades"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jarduerak"
+          }
+        }
       }
     },
-
-    "field.title" : {
-      "comment" : "Field label for event title",
+    "categoria.alojamiento" : {
+      "comment" : "Stage category: accommodation",
+      "extractionState" : "stale",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Title" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Título" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Izenburua" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accommodation"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alojamiento"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ostatua"
+          }
+        }
+      }
+    },
+    "categoria.foodAndDrink" : {
+      "comment" : "Stage category: food and drink",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Food & Drink"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comida y bebida"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Janaria eta edaria"
+          }
+        }
+      }
+    },
+    "categoria.ocio" : {
+      "comment" : "Stage category: entertainment",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entertainment"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocio"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aisia"
+          }
+        }
+      }
+    },
+    "categoria.transporte" : {
+      "comment" : "Stage category: transport",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transport"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transporte"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garraioa"
+          }
+        }
+      }
+    },
+    "categoria.vuelos" : {
+      "comment" : "Stage category: flights",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flights"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vuelos"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hegaldiak"
+          }
+        }
+      }
+    },
+    "Check-in" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrada"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sarrera"
+          }
+        }
+      }
+    },
+    "Check-out" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salida"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Irteera"
+          }
+        }
+      }
+    },
+    "City" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ciudad"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiria"
+          }
+        }
+      }
+    },
+    "Cost" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coste"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kostua"
+          }
+        }
+      }
+    },
+    "Country" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "País"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herrialdea"
+          }
+        }
+      }
+    },
+    "Date" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data"
+          }
+        }
+      }
+    },
+    "Dates" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fechas"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datak"
+          }
+        }
+      }
+    },
+    "Delete" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ezabatu"
+          }
+        }
+      }
+    },
+    "Departure" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salida"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Irteera"
+          }
+        }
+      }
+    },
+    "Destination" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Destino"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Helmuga"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hecho"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eginda"
+          }
+        }
+      }
+    },
+    "Edit" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editatu"
+          }
+        }
+      }
+    },
+    "Edit plan" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar plan"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plana editatu"
+          }
+        }
+      }
+    },
+    "Email" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Email"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posta elektronikoa"
+          }
+        }
+      }
+    },
+    "End" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fin"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amaiera"
+          }
+        }
+      }
+    },
+    "Error accepting invitation" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al aceptar la invitación"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Errore gonbidapena onartzean"
+          }
+        }
+      }
+    },
+    "Error saving" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al guardar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Errore gordetzean"
+          }
+        }
+      }
+    },
+    "Estimated" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previsto"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aurreikusia"
+          }
+        }
+      }
+    },
+    "Export" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esportatu"
+          }
+        }
+      }
+    },
+    "Extras" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extras"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gehigarriak"
+          }
+        }
       }
     },
     "field.name" : {
       "comment" : "Field label for place or entity name",
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Name" } },
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Izena" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izena"
+          }
+        }
       }
     },
-
-    "New %@" : {
-      "comment" : "New stage form title: New <type name>",
+    "field.title" : {
+      "comment" : "Field label for event title",
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nuevo %@" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "%@ berria" } }
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izenburua"
+          }
+        }
       }
     },
-
-    "No plans" : {
+    "Generated with Unplanned" : {
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin planes" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Planik gabe" } }
-      }
-    },
-    "Add your first trip with the + button" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Añade tu primer viaje con el botón +" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Gehitu zure lehen bidaia + botoiarekin" } }
-      }
-    },
-    "Export" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Exportar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Esportatu" } }
-      }
-    },
-    "Error accepting invitation" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Error al aceptar la invitación" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Errore gonbidapena onartzean" } }
-      }
-    },
-    "No title" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin título" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Izenbururik gabe" } }
-      }
-    },
-    "Trip" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Viaje" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Bidaia" } }
-      }
-    },
-    "No stages" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin etapas" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Etaparik gabe" } }
-      }
-    },
-    "Add the first stage with the + button" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Añade la primera etapa con el botón +" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Gehitu lehen etapa + botoiarekin" } }
-      }
-    },
-    "View on map" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ver en el mapa" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Ikusi mapan" } }
-      }
-    },
-    "Edit" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Editar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Editatu" } }
-      }
-    },
-    "Delete" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Eliminar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Ezabatu" } }
-      }
-    },
-    "New plan" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nuevo plan" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Plan berria" } }
-      }
-    },
-    "Edit plan" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Editar plan" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Plana editatu" } }
-      }
-    },
-    "Cancel" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cancelar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Utzi" } }
-      }
-    },
-    "Save" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Guardar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Gorde" } }
-      }
-    },
-    "Accept" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Aceptar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Onartu" } }
-      }
-    },
-    "Done" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hecho" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Eginda" } }
-      }
-    },
-    "Error saving" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Error al guardar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Errore gordetzean" } }
-      }
-    },
-    "Plan" : {
-      "comment" : "Section header in plan form",
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Plan" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Plana" } }
-      }
-    },
-    "Title" : {
-      "comment" : "Field label for plan title",
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Título" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Izenburua" } }
-      }
-    },
-    "With dates" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Con fechas" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Dataekin" } }
-      }
-    },
-    "Start" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Comienzo" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hasiera" } }
-      }
-    },
-    "End" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Fin" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Amaiera" } }
-      }
-    },
-    "Notes" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Notas" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Oharrak" } }
-      }
-    },
-    "Cost" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Coste" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Kostua" } }
-      }
-    },
-    "Estimated" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Previsto" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Aurreikusia" } }
-      }
-    },
-    "Extras" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Extras" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Gehigarriak" } }
-      }
-    },
-    "Total" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Total" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Guztira" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Generado con Unplanned"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unplanned-ekin sortua"
+          }
+        }
       }
     },
     "Hotel" : {
       "comment" : "Section header in hotel form",
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hotel" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hotela" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hotel"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hotela"
+          }
+        }
       }
     },
     "Hotel name" : {
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre del hotel" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hotelaren izena" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre del hotel"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hotelaren izena"
+          }
+        }
       }
     },
-    "Dates" : {
+    "Moneda" : {
+
+    },
+    "New %@" : {
+      "comment" : "New stage form title",
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Fechas" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Datak" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevo %@"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ berria"
+          }
+        }
       }
     },
-    "Check-in" : {
+    "New plan" : {
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Entrada" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Sarrera" } }
-      }
-    },
-    "Check-out" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Salida" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Irteera" } }
-      }
-    },
-    "Nights" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Noches" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Gauak" } }
-      }
-    },
-    "Address" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dirección" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Helbidea" } }
-      }
-    },
-    "Origin" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Origen" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Jatorria" } }
-      }
-    },
-    "Destination" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Destino" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Helmuga" } }
-      }
-    },
-    "Departure" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Salida" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Irteera" } }
-      }
-    },
-    "Arrival" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Llegada" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Iristea" } }
-      }
-    },
-    "Options" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Opciones" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Aukerak" } }
-      }
-    },
-    "Round trip" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ruta circular" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Joan-etorria" } }
-      }
-    },
-    "Date" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Fecha" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Data" } }
-      }
-    },
-    "Time" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hora" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Ordua" } }
-      }
-    },
-    "Booking" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Reserva" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Erreserba" } }
-      }
-    },
-    "Reference" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Referencia" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Erreferentzia" } }
-      }
-    },
-    "Provider" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Proveedor" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hornitzailea" } }
-      }
-    },
-    "Phone" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Teléfono" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Telefonoa" } }
-      }
-    },
-    "Email" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Email" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Posta elektronikoa" } }
-      }
-    },
-    "Website" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Web" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Webgunea" } }
-      }
-    },
-    "Booking notes" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Notas de reserva" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Erreserba oharrak" } }
-      }
-    },
-    "Search on map" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Buscar en el mapa" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Bilatu mapan" } }
-      }
-    },
-    "Place name" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre del lugar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Lekuaren izena" } }
-      }
-    },
-    "City" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ciudad" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hiria" } }
-      }
-    },
-    "Country" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "País" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Herrialdea" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuevo plan"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan berria"
+          }
+        }
       }
     },
     "New stage" : {
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Nueva etapa" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Etapa berria" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nueva etapa"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etapa berria"
+          }
+        }
+      }
+    },
+    "Nights" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noches"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gauak"
+          }
+        }
+      }
+    },
+    "iCloud Required" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "iCloud necesario" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "iCloud beharrezkoa da" } }
+      }
+    },
+    "Sign in to iCloud in Settings to use Unplanned." : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Inicia sesión en iCloud en Ajustes para usar Unplanned." } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hasi saioa iCloud-en Ezarpenetan Unplanned erabiltzeko." } }
+      }
+    },
+    "iCloud access is restricted on this device." : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "El acceso a iCloud está restringido en este dispositivo." } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "iCloud-erako sarbidea mugatua da gailu honetan." } }
+      }
+    },
+    "Could not determine iCloud account status. Check your connection." : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "No se pudo determinar el estado de iCloud. Comprueba tu conexión." } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Ezin izan da iCloud egoera zehaztu. Egiaztatu konexioa." } }
+      }
+    },
+    "iCloud is temporarily unavailable. Try again later." : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "iCloud no está disponible temporalmente. Inténtalo de nuevo más tarde." } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "iCloud ez dago eskuragarri momentuz. Saiatu berriro geroago." } }
+      }
+    },
+    "iCloud account is not available." : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "La cuenta de iCloud no está disponible." } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "iCloud kontua ez dago eskuragarri." } }
+      }
+    },
+
+    "No plans" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin planes"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Planik gabe"
+          }
+        }
+      }
+    },
+    "No stages" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin etapas"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etaparik gabe"
+          }
+        }
+      }
+    },
+    "No stages recorded." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin etapas registradas."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Etaparik erregistratu gabe."
+          }
+        }
+      }
+    },
+    "No title" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin título"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izenbururik gabe"
+          }
+        }
+      }
+    },
+    "Notes" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notas"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oharrak"
+          }
+        }
       }
     },
     "Open in Maps" : {
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir en Mapas" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Mapetan ireki" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir en Mapas"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mapetan ireki"
+          }
+        }
       }
     },
-    "Select location" : {
+    "Options" : {
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Seleccionar ubicación" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Kokapena hautatu" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opciones"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aukerak"
+          }
+        }
+      }
+    },
+    "Origin" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Origen"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jatorria"
+          }
+        }
+      }
+    },
+    "Phone" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teléfono"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Telefonoa"
+          }
+        }
+      }
+    },
+    "Place name" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nombre del lugar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lekuaren izena"
+          }
+        }
+      }
+    },
+    "Plan" : {
+      "comment" : "Section header in plan form",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plana"
+          }
+        }
+      }
+    },
+    "Provider" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Proveedor"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hornitzailea"
+          }
+        }
+      }
+    },
+    "Reference" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Referencia"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erreferentzia"
+          }
+        }
+      }
+    },
+    "Round trip" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ruta circular"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Joan-etorria"
+          }
+        }
+      }
+    },
+    "Save" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gorde"
+          }
+        }
+      }
+    },
+    "Search for a place, city or address" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar lugar, ciudad o dirección"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilatu lekua, hiria edo helbidea"
+          }
+        }
+      }
+    },
+    "Search on map" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar en el mapa"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilatu mapan"
+          }
+        }
       }
     },
     "Select" : {
       "comment" : "Button to confirm map location selection",
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Seleccionar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hautatu" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hautatu"
+          }
+        }
       }
     },
-    "Search for a place, city or address" : {
+    "Select location" : {
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Buscar lugar, ciudad o dirección" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Bilatu lekua, hiria edo helbidea" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seleccionar ubicación"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kokapena hautatu"
+          }
+        }
       }
     },
     "Selected location" : {
+      "extractionState" : "stale",
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Ubicación seleccionada" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Hautatutako kokapena" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ubicación seleccionada"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hautatutako kokapena"
+          }
+        }
       }
     },
-    "No stages recorded." : {
+    "Start" : {
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin etapas registradas." } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Etaparik erregistratu gabe." } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comienzo"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hasiera"
+          }
+        }
       }
     },
-    "Generated with Unplanned" : {
+    "Time" : {
       "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Generado con Unplanned" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Unplanned-ekin sortua" } }
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hora"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordua"
+          }
+        }
+      }
+    },
+    "tipo.actividad" : {
+      "comment" : "Stage type: activity",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activity"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actividad"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jarduera"
+          }
+        }
+      }
+    },
+    "tipo.bar" : {
+      "comment" : "Stage type: pub and bar",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pub & Bar"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pub & Bar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pub & Barra"
+          }
+        }
+      }
+    },
+    "tipo.barco" : {
+      "comment" : "Stage type: ferry",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ferry"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barco"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Itsasontzia"
+          }
+        }
+      }
+    },
+    "tipo.bus" : {
+      "comment" : "Stage type: bus",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bus"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bus"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autobusa"
+          }
+        }
+      }
+    },
+    "tipo.cafe" : {
+      "comment" : "Stage type: café",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Café"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Café"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kafetegia"
+          }
+        }
+      }
+    },
+    "tipo.cine" : {
+      "comment" : "Stage type: cinema",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cinema"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cine"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zinema"
+          }
+        }
+      }
+    },
+    "tipo.coche" : {
+      "comment" : "Stage type: car",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Car"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coche"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoa"
+          }
+        }
+      }
+    },
+    "tipo.compras" : {
+      "comment" : "Stage type: shopping",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shopping"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compras"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erosketak"
+          }
+        }
+      }
+    },
+    "tipo.concierto" : {
+      "comment" : "Stage type: concert",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concert"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concierto"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontzertua"
+          }
+        }
+      }
+    },
+    "tipo.deporte" : {
+      "comment" : "Stage type: sport",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sport"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deporte"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kirola"
+          }
+        }
+      }
+    },
+    "tipo.hotel" : {
+      "comment" : "Stage type: hotel",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hotel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hotel"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hotela"
+          }
+        }
+      }
+    },
+    "tipo.metro" : {
+      "comment" : "Stage type: subway",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metro"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metro"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metroa"
+          }
+        }
+      }
+    },
+    "tipo.museo" : {
+      "comment" : "Stage type: museum",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Museum"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Museo"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Museoa"
+          }
+        }
+      }
+    },
+    "tipo.restaurante" : {
+      "comment" : "Stage type: restaurant",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurant"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurante"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jatetxea"
+          }
+        }
+      }
+    },
+    "tipo.reunion" : {
+      "comment" : "Stage type: meeting",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meeting"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reunión"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilera"
+          }
+        }
+      }
+    },
+    "tipo.taxi" : {
+      "comment" : "Stage type: taxi",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taxi"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taxi"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taxia"
+          }
+        }
+      }
+    },
+    "tipo.teatro" : {
+      "comment" : "Stage type: theatre",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theatre"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teatro"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antzokia"
+          }
+        }
+      }
+    },
+    "tipo.tren" : {
+      "comment" : "Stage type: train",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Train"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tren"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trena"
+          }
+        }
+      }
+    },
+    "tipo.vidaNocturna" : {
+      "comment" : "Stage type: nightlife",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nightlife"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vida nocturna"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gaueko bizitza"
+          }
+        }
+      }
+    },
+    "tipo.visitaGuiada" : {
+      "comment" : "Stage type: guided tour",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guided tour"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visita guiada"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bisita gidatua"
+          }
+        }
+      }
+    },
+    "tipo.vuelo" : {
+      "comment" : "Stage type: flight",
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flight"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vuelo"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hegaldia"
+          }
+        }
+      }
+    },
+    "Title" : {
+      "comment" : "Field label for plan title",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Título"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Izenburua"
+          }
+        }
+      }
+    },
+    "Total" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guztira"
+          }
+        }
+      }
+    },
+    "Trip" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Viaje"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bidaia"
+          }
+        }
+      }
+    },
+    "Unplanned" : {
+
+    },
+    "UNPLANNED" : {
+
+    },
+    "View on map" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver en el mapa"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ikusi mapan"
+          }
+        }
+      }
+    },
+    "Web" : {
+
+    },
+    "Website" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webgunea"
+          }
+        }
+      }
+    },
+    "With dates" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con fechas"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dataekin"
+          }
+        }
       }
     }
-
   },
   "version" : "1.0"
 }
