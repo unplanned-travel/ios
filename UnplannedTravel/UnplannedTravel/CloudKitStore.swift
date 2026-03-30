@@ -262,7 +262,7 @@ final class CloudKitStore {
     func prepararShare(para plan: Plan) async throws -> (CKRecord, CKShare) {
         guard let record = planRecords[plan.id] else {
             throw NSError(domain: "CloudKitStore", code: 1,
-                         userInfo: [NSLocalizedDescriptionKey: "Registro no encontrado en caché local"])
+                         userInfo: [NSLocalizedDescriptionKey: "Record not found in local cache"])
         }
 
         // Reuse existing share if the record is already shared.
@@ -272,7 +272,7 @@ final class CloudKitStore {
         }
 
         let share = CKShare(rootRecord: record)
-        share[CKShare.SystemFieldKey.title] = (plan.titulo.isEmpty ? "Viaje" : plan.titulo) as CKRecordValue
+        share[CKShare.SystemFieldKey.title] = (plan.titulo.isEmpty ? "Trip" : plan.titulo) as CKRecordValue
         share.publicPermission = .none
 
         let results = try await privateDB.modifyRecords(saving: [record, share], deleting: [])

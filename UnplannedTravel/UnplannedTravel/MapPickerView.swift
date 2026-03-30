@@ -28,7 +28,7 @@ struct MapPickerView: View {
             .searchable(
                 text: $searchText,
                 placement: .navigationBarDrawer(displayMode: .always),
-                prompt: "Buscar lugar, ciudad o dirección"
+                prompt: "Search for a place, city or address"
             )
             .searchSuggestions {
                 ForEach(suggestions, id: \.self) { item in
@@ -70,14 +70,14 @@ struct MapPickerView: View {
                 }
             }
             .animation(.spring(duration: 0.3), value: selectedItem != nil)
-            .navigationTitle("Seleccionar ubicación")
+            .navigationTitle("Select location")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
+                    Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Seleccionar") { aplicar() }
+                    Button("Select") { aplicar() }
                         .disabled(selectedItem == nil)
                         .bold()
                 }
@@ -139,7 +139,7 @@ struct MapPickerView: View {
                 .font(.title2)
                 .foregroundStyle(.red)
             VStack(alignment: .leading, spacing: 3) {
-                Text(item.name ?? "Ubicación seleccionada")
+                Text(item.name ?? "Selected location")
                     .font(.headline)
                 let partes = [
                     item.placemark.thoroughfare,

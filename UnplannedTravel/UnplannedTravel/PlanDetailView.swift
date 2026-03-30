@@ -31,19 +31,19 @@ struct PlanDetailView: View {
                         Button {
                             etapaParaMapa = etapa
                         } label: {
-                            Label("Ver en el mapa", systemImage: "map")
+                            Label("View on map", systemImage: "map")
                         }
                     }
                     Button {
                         etapaParaEditar = etapa
                     } label: {
-                        Label("Editar", systemImage: "pencil")
+                        Label("Edit", systemImage: "pencil")
                     }
                     if plan?.esPropio == true {
                         Button(role: .destructive) {
                             Task { try? await store.eliminarEtapa(etapa) }
                         } label: {
-                            Label("Eliminar", systemImage: "trash")
+                            Label("Delete", systemImage: "trash")
                         }
                     }
                 }
@@ -55,7 +55,7 @@ struct PlanDetailView: View {
                 }
             }
         }
-        .navigationTitle(plan?.titulo ?? "Viaje")
+        .navigationTitle(plan?.titulo ?? "Trip")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             if plan?.esPropio == true {
@@ -102,9 +102,9 @@ struct PlanDetailView: View {
         .overlay {
             if etapas.isEmpty {
                 ContentUnavailableView(
-                    "Sin etapas",
+                    "No stages",
                     systemImage: "list.bullet.clipboard",
-                    description: Text("Añade la primera etapa con el botón +")
+                    description: Text("Add the first stage with the + button")
                 )
             }
         }

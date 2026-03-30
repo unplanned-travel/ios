@@ -21,7 +21,7 @@ struct PlanesView: View {
                             urlPDF = plan.generarPDF(etapas: store.etapasOrdenadas(para: plan.id))
                             mostrarCompartir = true
                         } label: {
-                            Label("Exportar", systemImage: "square.and.arrow.up")
+                            Label("Export", systemImage: "square.and.arrow.up")
                         }
                         .tint(.blue)
                         .disabled(store.etapasPorPlan[plan.id]?.isEmpty ?? true)
@@ -48,9 +48,9 @@ struct PlanesView: View {
             .overlay {
                 if store.planes.isEmpty && !store.cargando {
                     ContentUnavailableView(
-                        "Sin planes",
+                        "No plans",
                         systemImage: "map",
-                        description: Text("Añade tu primer viaje con el botón +")
+                        description: Text("Add your first trip with the + button")
                     )
                 }
             }
@@ -74,11 +74,11 @@ struct PlanesView: View {
                 }
             }
         }
-        .alert("Error al aceptar la invitación", isPresented: .init(
+        .alert("Error accepting invitation", isPresented: .init(
             get: { errorImport != nil },
             set: { if !$0 { errorImport = nil } }
         )) {
-            Button("Aceptar", role: .cancel) {}
+            Button("Accept", role: .cancel) {}
         } message: {
             Text(errorImport ?? "")
         }
@@ -91,7 +91,7 @@ struct PlanRowView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                Text(plan.titulo.isEmpty ? "Sin título" : plan.titulo)
+                Text(plan.titulo.isEmpty ? "No title" : plan.titulo)
                     .font(.headline)
                 if plan.estaCompartido {
                     Image(systemName: plan.esPropio ? "person.2.fill" : "person.fill.checkmark")

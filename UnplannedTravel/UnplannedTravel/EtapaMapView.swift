@@ -37,11 +37,11 @@ struct EtapaMapView: View {
                     Button {
                         abrirEnMapas()
                     } label: {
-                        Label("Abrir en Mapas", systemImage: "arrow.triangle.turn.up.right.circle")
+                        Label("Open in Maps", systemImage: "arrow.triangle.turn.up.right.circle")
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Hecho") { dismiss() }
+                    Button("Done") { dismiss() }
                 }
             }
             .safeAreaInset(edge: .bottom) {

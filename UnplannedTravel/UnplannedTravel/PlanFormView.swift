@@ -22,38 +22,38 @@ struct PlanFormView: View {
         NavigationStack {
             Form {
                 Section("Plan") {
-                    TextField("Título", text: $titulo)
+                    TextField("Title", text: $titulo)
                 }
                 Section {
-                    Toggle("Con fechas", isOn: $conFechas.animation())
+                    Toggle("With dates", isOn: $conFechas.animation())
                     if conFechas {
-                        DatePicker("Comienzo", selection: $fechaInicio, displayedComponents: .date)
-                        DatePicker("Fin", selection: $fechaFin,
+                        DatePicker("Start", selection: $fechaInicio, displayedComponents: .date)
+                        DatePicker("End", selection: $fechaFin,
                                    in: fechaInicio..., displayedComponents: .date)
                     }
                 }
-                Section("Notas") {
+                Section("Notes") {
                     TextEditor(text: $notas)
                         .frame(minHeight: 80)
                 }
             }
-            .navigationTitle(plan == nil ? "Nuevo plan" : "Editar plan")
+            .navigationTitle(plan == nil ? "New plan" : "Edit plan")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
+                    Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Guardar") { guardar() }
+                    Button("Save") { guardar() }
                         .disabled(titulo.trimmingCharacters(in: .whitespaces).isEmpty || guardando)
                 }
             }
             .onAppear { cargarSiEdita() }
-            .alert("Error al guardar", isPresented: .init(
+            .alert("Error saving", isPresented: .init(
                 get: { errorGuardado != nil },
                 set: { if !$0 { errorGuardado = nil } }
             )) {
-                Button("Aceptar", role: .cancel) {}
+                Button("Accept", role: .cancel) {}
             } message: {
                 Text(errorGuardado ?? "")
             }

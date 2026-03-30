@@ -11,29 +11,7 @@ enum TipoEtapa: String, CaseIterable, Codable, Identifiable {
     var id: String { rawValue }
 
     var nombre: String {
-        switch self {
-        case .vuelo:        return "Vuelo"
-        case .hotel:        return "Hotel"
-        case .coche:        return "Coche"
-        case .taxi:         return "Taxi"
-        case .bus:          return "Bus"
-        case .tren:         return "Tren"
-        case .metro:        return "Metro"
-        case .barco:        return "Barco"
-        case .restaurante:  return "Restaurante"
-        case .bar:          return "Pub & Bar"
-        case .cafe:         return "Café"
-        case .cine:         return "Cine"
-        case .teatro:       return "Teatro"
-        case .concierto:    return "Concierto"
-        case .vidaNocturna: return "Nightlife"
-        case .visitaGuiada: return "Visita guiada"
-        case .museo:        return "Museo"
-        case .compras:      return "Compras"
-        case .reunion:      return "Reunión"
-        case .deporte:      return "Deporte"
-        case .actividad:    return "Actividad"
-        }
+        NSLocalizedString("tipo.\(rawValue)", comment: "Stage type name")
     }
 
     var icono: String {
@@ -63,14 +41,18 @@ enum TipoEtapa: String, CaseIterable, Codable, Identifiable {
     }
 
     enum Categoria: String, CaseIterable, Identifiable {
-        case vuelos      = "Vuelos"
-        case alojamiento = "Alojamiento"
-        case transporte  = "Transporte"
-        case foodAndDrink = "Food & Drink"
-        case ocio        = "Ocio"
-        case actividades = "Actividades"
+        case vuelos      = "vuelos"
+        case alojamiento = "alojamiento"
+        case transporte  = "transporte"
+        case foodAndDrink = "foodAndDrink"
+        case ocio        = "ocio"
+        case actividades = "actividades"
 
         var id: String { rawValue }
+
+        var titulo: String {
+            NSLocalizedString("categoria.\(rawValue)", comment: "Stage category name")
+        }
 
         var tipos: [TipoEtapa] {
             TipoEtapa.allCases.filter { $0.categoria == self }
@@ -94,7 +76,6 @@ enum TipoEtapa: String, CaseIterable, Codable, Identifiable {
         }
     }
 
-    /// True for types that use origen→destino rather than a venue direccion.
     var esTransporte: Bool {
         switch self {
         case .vuelo, .coche, .taxi, .bus, .tren, .metro, .barco:
@@ -104,7 +85,6 @@ enum TipoEtapa: String, CaseIterable, Codable, Identifiable {
         }
     }
 
-    /// True for types that store a booking reference (reserva).
     var tieneReserva: Bool {
         switch self {
         case .vuelo, .hotel, .tren, .barco, .bus:
@@ -114,14 +94,14 @@ enum TipoEtapa: String, CaseIterable, Codable, Identifiable {
         }
     }
 
-    /// Label for the main name/title field.
+    /// Localized placeholder label for the main name/title field.
     var etiquetaNombre: String {
         switch self {
         case .cine, .teatro, .concierto, .vidaNocturna,
              .visitaGuiada, .museo, .reunion, .deporte, .actividad:
-            return "Título"
+            return NSLocalizedString("field.title", value: "Title", comment: "Field label for event title")
         default:
-            return "Nombre"
+            return NSLocalizedString("field.name", value: "Name", comment: "Field label for place or entity name")
         }
     }
 }

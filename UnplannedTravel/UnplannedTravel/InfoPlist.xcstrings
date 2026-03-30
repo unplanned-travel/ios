@@ -1,0 +1,21 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "comment" : "App display name",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Unplanned" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Unplanned" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Unplanned" } }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Location permission prompt",
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Se usa tu ubicación para centrar el mapa y facilitar la búsqueda de lugares cercanos." } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Zure kokapena mapa zentratzeko eta inguruko lekuak bilatzeko erabiltzen da." } }
+      }
+    }
+  },
+  "version" : "1.0"
+}

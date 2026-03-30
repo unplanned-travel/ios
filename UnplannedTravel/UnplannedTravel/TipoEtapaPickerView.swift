@@ -8,7 +8,7 @@ struct TipoEtapaPickerView: View {
         NavigationStack {
             List {
                 ForEach(TipoEtapa.Categoria.allCases) { categoria in
-                    Section(categoria.rawValue) {
+                    Section(categoria.titulo) {
                         ForEach(categoria.tipos) { tipo in
                             Button {
                                 onSeleccion(tipo)
@@ -21,11 +21,11 @@ struct TipoEtapaPickerView: View {
                     }
                 }
             }
-            .navigationTitle("Nueva etapa")
+            .navigationTitle("New stage")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
+                    Button("Cancel") { dismiss() }
                 }
             }
         }

@@ -15,7 +15,7 @@ struct PDFPlanView: View {
                 .padding(.bottom, 28)
 
             if etapas.isEmpty {
-                Text("Sin etapas registradas.")
+                Text("No stages recorded.")
                     .font(.system(size: 13))
                     .foregroundStyle(Color(white: 0.5))
             } else {
@@ -42,7 +42,7 @@ struct PDFPlanView: View {
                 .foregroundStyle(Color.blue)
                 .kerning(2.5)
 
-            Text(plan.titulo.isEmpty ? "Sin título" : plan.titulo)
+            Text(plan.titulo.isEmpty ? "No title" : plan.titulo)
                 .font(.system(size: 26, weight: .bold))
                 .foregroundStyle(Color.black)
 
@@ -76,7 +76,7 @@ struct PDFPlanView: View {
 
     private var pie: some View {
         HStack {
-            Text("Generado con Unplanned")
+            Text("Generated with Unplanned")
             Spacer()
             let fmt = DateFormatter()
             let _ = { fmt.dateStyle = .medium; fmt.timeStyle = .none }()

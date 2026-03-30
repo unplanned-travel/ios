@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Se usa tu ubicación para centrar el mapa y facilitar la búsqueda de lugares cercanos.</string>
+	<string>Your location is used to center the map and help find nearby places.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
