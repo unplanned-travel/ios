@@ -14,6 +14,22 @@ struct EtapaFormView: View {
     @State private var guardando = false
     @State private var errorGuardado: String?
 
+    // Single map sheet for the whole form — avoids "already presenting" conflicts
+    // when multiple DireccionSection sub-views exist simultaneously.
+    private enum SlotMapa: Int, Identifiable {
+        case origen, destino, principal
+        var id: Int { rawValue }
+    }
+    @State private var slotMapa: SlotMapa? = nil
+
+    private var bindingParaSlotMapa: Binding<Direccion> {
+        switch slotMapa {
+        case .origen:    return origenBinding
+        case .destino:   return destinoBinding
+        case .principal, nil: return direccionBinding
+        }
+    }
+
     init(planID: CKRecord.ID, tipo: TipoEtapa, fechaInicio: Date, etapaExistente: Etapa? = nil) {
         self.planID = planID
         self.etapaExistente = etapaExistente
@@ -71,6 +87,9 @@ struct EtapaFormView: View {
             } message: {
                 Text(errorGuardado ?? "")
             }
+        }
+        .sheet(item: $slotMapa) { _ in
+            MapPickerView(direccion: bindingParaSlotMapa)
         }
     }
 
@@ -154,12 +173,12 @@ extension EtapaFormView {
 
     @ViewBuilder
     func vueloSections() -> some View {
-        DireccionSection(titulo: "Origin", direccion: origenBinding)
+        DireccionSection(titulo: "Origin", direccion: origenBinding, onBuscarEnMapa: { slotMapa = .origen })
         Section {
             DatePicker("Departure", selection: $borrador.fechaInicio,
                        displayedComponents: [.date, .hourAndMinute])
         }
-        DireccionSection(titulo: "Destination", direccion: destinoBinding)
+        DireccionSection(titulo: "Destination", direccion: destinoBinding, onBuscarEnMapa: { slotMapa = .destino })
         Section {
             DatePicker("Arrival", selection: fechaFinBinding(default: Calendar.current.date(
                 byAdding: .hour, value: 2, to: borrador.fechaInicio) ?? borrador.fechaInicio),
@@ -190,18 +209,18 @@ extension EtapaFormView {
                 }
             }
         }
-        DireccionSection(titulo: "Address", direccion: direccionBinding)
+        DireccionSection(titulo: "Address", direccion: direccionBinding, onBuscarEnMapa: { slotMapa = .principal })
         ReservaSection(reserva: reservaBinding)
     }
 
     @ViewBuilder
     func transporteSections() -> some View {
-        DireccionSection(titulo: "Origin", direccion: origenBinding)
+        DireccionSection(titulo: "Origin", direccion: origenBinding, onBuscarEnMapa: { slotMapa = .origen })
         Section {
             DatePicker("Departure", selection: $borrador.fechaInicio,
                        displayedComponents: [.date, .hourAndMinute])
         }
-        DireccionSection(titulo: "Destination", direccion: destinoBinding)
+        DireccionSection(titulo: "Destination", direccion: destinoBinding, onBuscarEnMapa: { slotMapa = .destino })
         Section {
             fechaFinToggle(label: "Arrival")
         }
@@ -227,7 +246,7 @@ extension EtapaFormView {
             DatePicker("Time", selection: $borrador.fechaInicio,
                        displayedComponents: [.date, .hourAndMinute])
         }
-        DireccionSection(titulo: "Address", direccion: direccionBinding)
+        DireccionSection(titulo: "Address", direccion: direccionBinding, onBuscarEnMapa: { slotMapa = .principal })
     }
 
     @ViewBuilder
@@ -240,7 +259,7 @@ extension EtapaFormView {
                        displayedComponents: [.date, .hourAndMinute])
             fechaFinToggle(label: "End")
         }
-        DireccionSection(titulo: "Address", direccion: direccionBinding)
+        DireccionSection(titulo: "Address", direccion: direccionBinding, onBuscarEnMapa: { slotMapa = .principal })
     }
 
     @ViewBuilder
@@ -253,7 +272,7 @@ extension EtapaFormView {
                        displayedComponents: [.date, .hourAndMinute])
             fechaFinToggle(label: "End")
         }
-        DireccionSection(titulo: "Address", direccion: direccionBinding)
+        DireccionSection(titulo: "Address", direccion: direccionBinding, onBuscarEnMapa: { slotMapa = .principal })
     }
 }
 
@@ -309,12 +328,12 @@ extension EtapaFormView {
 struct DireccionSection: View {
     let titulo: String
     @Binding var direccion: Direccion
-    @State private var mostrarMapa = false
+    let onBuscarEnMapa: () -> Void
 
     var body: some View {
         Section(titulo) {
             Button {
-                mostrarMapa = true
+                onBuscarEnMapa()
             } label: {
                 Label("Search on map", systemImage: "map")
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -352,9 +371,6 @@ struct DireccionSection: View {
                 .font(.caption)
             TextField("Country", text: $direccion.pais)
                 .font(.caption)
-        }
-        .sheet(isPresented: $mostrarMapa) {
-            MapPickerView(direccion: $direccion)
         }
     }
 }
