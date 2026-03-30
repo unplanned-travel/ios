@@ -184,11 +184,23 @@ struct MapPickerView: View {
         guard let item = selectedItem else { return }
         let p = item.placemark
         direccion.descripcion = item.name ?? p.name ?? ""
+        direccion.direccionCompleta = formatearDireccion(p)
         direccion.ciudad = p.locality ?? p.administrativeArea ?? ""
         direccion.pais = p.country ?? ""
         direccion.latitud = p.coordinate.latitude
         direccion.longitud = p.coordinate.longitude
         dismiss()
+    }
+
+    private func formatearDireccion(_ p: MKPlacemark) -> String {
+        let numero = p.subThoroughfare ?? ""
+        let calle  = p.thoroughfare ?? ""
+        let cp     = p.postalCode ?? ""
+        let ciudad = p.locality ?? p.administrativeArea ?? ""
+
+        let linea1 = [calle, numero].filter { !$0.isEmpty }.joined(separator: " ")
+        let linea2 = [cp, ciudad].filter { !$0.isEmpty }.joined(separator: " ")
+        return [linea1, linea2].filter { !$0.isEmpty }.joined(separator: ", ")
     }
 
     // MARK: - Sub-views

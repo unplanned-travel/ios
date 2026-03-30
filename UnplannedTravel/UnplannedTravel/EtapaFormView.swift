@@ -340,11 +340,16 @@ struct DireccionSection: View {
             }
 
             if !direccion.estaVacia {
-                HStack {
+                HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 2) {
                         if !direccion.descripcion.isEmpty {
                             Text(direccion.descripcion)
-                                .font(.subheadline)
+                                .font(.subheadline).bold()
+                        }
+                        if !direccion.direccionCompleta.isEmpty {
+                            Text(direccion.direccionCompleta)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                         }
                         let lugar = [direccion.ciudad, direccion.pais]
                             .filter { !$0.isEmpty }.joined(separator: ", ")
@@ -352,6 +357,12 @@ struct DireccionSection: View {
                             Text(lugar)
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
+                        }
+                        if direccion.tieneCoordenadas {
+                            Label("Coordinates saved", systemImage: "location.fill")
+                                .font(.caption2)
+                                .foregroundStyle(.tint)
+                                .padding(.top, 2)
                         }
                     }
                     Spacer()
@@ -367,10 +378,32 @@ struct DireccionSection: View {
 
             TextField("Place name", text: $direccion.descripcion)
                 .font(.caption)
+            TextField("Full address", text: $direccion.direccionCompleta)
+                .font(.caption)
             TextField("City", text: $direccion.ciudad)
                 .font(.caption)
             TextField("Country", text: $direccion.pais)
                 .font(.caption)
+            if direccion.tieneCoordenadas {
+                HStack {
+                    Label("Lat", systemImage: "location")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                    Text(String(format: "%.5f, %.5f", direccion.latitud!, direccion.longitud!))
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                    Button {
+                        direccion.latitud = nil
+                        direccion.longitud = nil
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.secondary)
+                            .font(.caption)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
         }
     }
 }

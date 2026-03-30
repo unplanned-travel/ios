@@ -1006,6 +1006,25 @@
         }
       }
     },
+    "Full address" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dirección completa" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Helbide osoa" } }
+      }
+    },
+    "Coordinates saved" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Coordenadas guardadas" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Koordenatuak gordeta" } }
+      }
+    },
+    "Lat" : {
+      "comment" : "Label for latitude/longitude display",
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Coord." } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Koordenat." } }
+      }
+    },
     "Place name" : {
       "localizations" : {
         "es" : {
@@ -1137,6 +1156,7 @@
     },
     "Select" : {
       "comment" : "Button to confirm map location selection",
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1166,12 +1186,6 @@
             "value" : "Kokapena hautatu"
           }
         }
-      }
-    },
-    "Use this location" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Usar esta ubicación" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Erabili kokapen hau" } }
       }
     },
     "Selected location" : {
@@ -1799,6 +1813,22 @@
     },
     "UNPLANNED" : {
 
+    },
+    "Use this location" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar esta ubicación"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erabili kokapen hau"
+          }
+        }
+      }
     },
     "View on map" : {
       "localizations" : {

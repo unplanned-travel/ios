@@ -98,7 +98,9 @@ struct EtapaMapView: View {
                 result.append(Punto(
                     id: "origen",
                     nombre: d.descripcion.isEmpty ? (d.ciudad.isEmpty ? "Origen" : d.ciudad) : d.descripcion,
-                    detalle: [d.ciudad, d.pais].filter { !$0.isEmpty }.joined(separator: ", "),
+                    detalle: d.direccionCompleta.isEmpty
+                        ? [d.ciudad, d.pais].filter { !$0.isEmpty }.joined(separator: ", ")
+                        : d.direccionCompleta,
                     coordenada: CLLocationCoordinate2D(latitude: d.latitud!, longitude: d.longitud!),
                     sistemaIcono: "arrow.up.right.circle"
                 ))
@@ -107,7 +109,9 @@ struct EtapaMapView: View {
                 result.append(Punto(
                     id: "destino",
                     nombre: d.descripcion.isEmpty ? (d.ciudad.isEmpty ? "Destino" : d.ciudad) : d.descripcion,
-                    detalle: [d.ciudad, d.pais].filter { !$0.isEmpty }.joined(separator: ", "),
+                    detalle: d.direccionCompleta.isEmpty
+                        ? [d.ciudad, d.pais].filter { !$0.isEmpty }.joined(separator: ", ")
+                        : d.direccionCompleta,
                     coordenada: CLLocationCoordinate2D(latitude: d.latitud!, longitude: d.longitud!),
                     sistemaIcono: "arrow.down.left.circle"
                 ))
@@ -116,7 +120,9 @@ struct EtapaMapView: View {
             result.append(Punto(
                 id: "lugar",
                 nombre: d.descripcion.isEmpty ? (d.ciudad.isEmpty ? etapa.tipo.nombre : d.ciudad) : d.descripcion,
-                detalle: [d.ciudad, d.pais].filter { !$0.isEmpty }.joined(separator: ", "),
+                detalle: d.direccionCompleta.isEmpty
+                    ? [d.ciudad, d.pais].filter { !$0.isEmpty }.joined(separator: ", ")
+                    : d.direccionCompleta,
                 coordenada: CLLocationCoordinate2D(latitude: d.latitud!, longitude: d.longitud!),
                 sistemaIcono: "mappin.circle"
             ))
