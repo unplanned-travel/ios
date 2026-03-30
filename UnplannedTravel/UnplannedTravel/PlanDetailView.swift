@@ -1,28 +1,28 @@
 import SwiftUI
-import SwiftData
+import CloudKit
 
 struct PlanDetailView: View {
-    @Bindable var plan: Plan
-    @Environment(\.modelContext) private var modelContext
+    @Environment(CloudKitStore.self) var store
+    let planID: CKRecord.ID
+
+    private var plan: Plan? { store.planes.first { $0.id == planID } }
+    private var etapas: [Etapa] { store.etapasOrdenadas(para: planID) }
 
     @State private var mostrarPicker = false
-    @State private var mostrarEditarPlan = false
-    @State private var etapaParaCrear: Etapa?
+    @State private var tipoSeleccionado: TipoEtapa?
+    @State private var mostrarNuevaEtapa = false
     @State private var etapaParaEditar: Etapa?
     @State private var etapaParaMapa: Etapa?
+    @State private var mostrarEditarPlan = false
+    @State private var mostrarCompartirICloud = false
+    @State private var mostrarCompartir = false
     @State private var generandoPDF = false
     @State private var urlPDF: URL?
-    @State private var mostrarCompartir = false
-    @State private var mostrarCompartirICloud = false
-    @State private var sincronizando = false
-    @State private var errorSync: String?
 
     var body: some View {
         List {
-            ForEach(plan.etapasOrdenadas) { etapa in
-                Button {
-                    etapaParaEditar = etapa
-                } label: {
+            ForEach(etapas) { etapa in
+                Button { etapaParaEditar = etapa } label: {
                     EtapaRowView(etapa: etapa)
                 }
                 .buttonStyle(.plain)
@@ -39,31 +39,46 @@ struct PlanDetailView: View {
                     } label: {
                         Label("Editar", systemImage: "pencil")
                     }
+                    if plan?.esPropio == true {
+                        Button(role: .destructive) {
+                            Task { try? await store.eliminarEtapa(etapa) }
+                        } label: {
+                            Label("Eliminar", systemImage: "trash")
+                        }
+                    }
                 }
             }
-            .onDelete(perform: eliminarEtapas)
+            .onDelete { offsets in
+                let targets = offsets.map { etapas[$0] }
+                Task {
+                    for e in targets { try? await store.eliminarEtapa(e) }
+                }
+            }
         }
-        .navigationTitle(plan.titulo)
+        .navigationTitle(plan?.titulo ?? "Viaje")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button { mostrarEditarPlan = true } label: {
-                    Image(systemName: "pencil")
+            if plan?.esPropio == true {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button { mostrarEditarPlan = true } label: {
+                        Image(systemName: "pencil")
+                    }
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                // iCloud sharing button
                 Button { mostrarCompartirICloud = true } label: {
-                    Image(systemName: plan.estaCompartido ? "person.2.fill" : "person.badge.plus")
+                    Image(systemName: plan?.estaCompartido == true ? "person.2.fill" : "person.badge.plus")
                 }
-                .disabled(plan.etapas.isEmpty)
+                .disabled(etapas.isEmpty || plan?.esPropio == false)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    generandoPDF = true
-                    urlPDF = plan.generarPDF()
-                    mostrarCompartir = true
-                    generandoPDF = false
+                    if let plan {
+                        generandoPDF = true
+                        urlPDF = plan.generarPDF(etapas: etapas)
+                        mostrarCompartir = true
+                        generandoPDF = false
+                    }
                 } label: {
                     if generandoPDF {
                         ProgressView()
@@ -71,19 +86,21 @@ struct PlanDetailView: View {
                         Image(systemName: "square.and.arrow.up")
                     }
                 }
-                .disabled(generandoPDF || plan.etapas.isEmpty)
+                .disabled(generandoPDF || etapas.isEmpty)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 EditButton()
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button { mostrarPicker = true } label: {
-                    Image(systemName: "plus")
+            if plan?.esPropio == true {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button { mostrarPicker = true } label: {
+                        Image(systemName: "plus")
+                    }
                 }
             }
         }
         .overlay {
-            if plan.etapas.isEmpty {
+            if etapas.isEmpty {
                 ContentUnavailableView(
                     "Sin etapas",
                     systemImage: "list.bullet.clipboard",
@@ -93,43 +110,40 @@ struct PlanDetailView: View {
         }
         .sheet(isPresented: $mostrarPicker) {
             TipoEtapaPickerView { tipo in
-                let etapa = Etapa(tipo: tipo, fechaInicio: ultimaFecha())
-                modelContext.insert(etapa)
-                etapa.plan = plan
-                etapaParaCrear = etapa
+                tipoSeleccionado = tipo
             }
         }
-        .sheet(item: $etapaParaCrear) { etapa in
-            EtapaFormView(etapa: etapa, esNueva: true)
+        .sheet(isPresented: $mostrarNuevaEtapa) {
+            if let tipo = tipoSeleccionado, let plan {
+                EtapaFormView(planID: plan.id, tipo: tipo, fechaInicio: ultimaFecha())
+            }
         }
         .sheet(item: $etapaParaEditar) { etapa in
-            EtapaFormView(etapa: etapa, esNueva: false)
+            EtapaFormView(planID: planID, tipo: etapa.tipo, fechaInicio: etapa.fechaInicio, etapaExistente: etapa)
         }
         .sheet(item: $etapaParaMapa) { etapa in
             EtapaMapView(etapa: etapa)
         }
         .sheet(isPresented: $mostrarCompartirICloud) {
-            CloudSharingView(plan: plan)
+            if let plan { CloudSharingView(plan: plan) }
         }
         .sheet(isPresented: $mostrarCompartir) {
-            if let url = urlPDF {
-                ShareSheet(items: [url])
-            }
+            if let url = urlPDF { ShareSheet(items: [url]) }
         }
         .sheet(isPresented: $mostrarEditarPlan) {
-            PlanFormView(plan: plan)
+            if let plan { PlanFormView(plan: plan) }
         }
-    }
-
-    private func eliminarEtapas(at offsets: IndexSet) {
-        let ordenadas = plan.etapasOrdenadas
-        for index in offsets { modelContext.delete(ordenadas[index]) }
+        .onChange(of: mostrarPicker) { _, isPresented in
+            if !isPresented && tipoSeleccionado != nil {
+                mostrarNuevaEtapa = true
+            }
+        }
+        .onChange(of: mostrarNuevaEtapa) { _, isPresented in
+            if !isPresented { tipoSeleccionado = nil }
+        }
     }
 
     private func ultimaFecha() -> Date {
-        plan.etapasOrdenadas.last?.fechaFin
-            ?? plan.etapasOrdenadas.last?.fechaInicio
-            ?? plan.fechaInicio
-            ?? Date()
+        etapas.last?.fechaFin ?? etapas.last?.fechaInicio ?? plan?.fechaInicio ?? Date()
     }
 }

@@ -4,6 +4,7 @@ import SwiftUI
 /// Fixed width of 595 pt (DIN A4 at 72 ppp) so the output is always the same regardless of device screen.
 struct PDFPlanView: View {
     let plan: Plan
+    let etapas: [Etapa]
 
     static let anchoPagina: CGFloat = 595  // A4: 210 mm a 72 ppp
     static let margen: CGFloat = 48
@@ -13,12 +14,12 @@ struct PDFPlanView: View {
             cabecera
                 .padding(.bottom, 28)
 
-            if plan.etapasOrdenadas.isEmpty {
+            if etapas.isEmpty {
                 Text("Sin etapas registradas.")
                     .font(.system(size: 13))
                     .foregroundStyle(Color(white: 0.5))
             } else {
-                ForEach(plan.etapasOrdenadas) { etapa in
+                ForEach(etapas) { etapa in
                     Divider()
                     EtapaPDFFila(etapa: etapa)
                 }

@@ -1,21 +1,31 @@
 import SwiftUI
-import SwiftData
+import CloudKit
 
 // MARK: - Main form
 
 struct EtapaFormView: View {
-    @Bindable var etapa: Etapa
-    var esNueva: Bool
-
-    @Environment(\.modelContext) private var modelContext
+    @Environment(CloudKitStore.self) var store
     @Environment(\.dismiss) private var dismiss
+
+    let planID: CKRecord.ID
+    var etapaExistente: Etapa?
+
+    @State private var borrador: Etapa
+    @State private var guardando = false
+    @State private var errorGuardado: String?
+
+    init(planID: CKRecord.ID, tipo: TipoEtapa, fechaInicio: Date, etapaExistente: Etapa? = nil) {
+        self.planID = planID
+        self.etapaExistente = etapaExistente
+        _borrador = State(initialValue: etapaExistente ?? Etapa(tipo: tipo, fechaInicio: fechaInicio, planID: planID))
+    }
 
     var body: some View {
         NavigationStack {
             Form {
                 encabezadoSection()
 
-                switch etapa.tipo {
+                switch borrador.tipo {
                 case .vuelo:
                     vueloSections()
                 case .hotel:
@@ -33,24 +43,50 @@ struct EtapaFormView: View {
                 costesSection()
                 notasSection()
             }
-            .navigationTitle(esNueva ? "Nuevo \(etapa.tipo.nombre.lowercased())" : etapa.tipo.nombre)
+            .navigationTitle(etapaExistente == nil
+                ? "Nuevo \(borrador.tipo.nombre.lowercased())"
+                : borrador.tipo.nombre)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                if esNueva {
+                if etapaExistente == nil {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancelar") {
-                            modelContext.delete(etapa)
-                            dismiss()
-                        }
+                        Button("Cancelar") { dismiss() }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Guardar") { dismiss() }
+                        Button("Guardar") { guardar() }
+                            .disabled(guardando)
                     }
                 } else {
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Hecho") { dismiss() }
+                        Button("Hecho") { guardar() }
+                            .disabled(guardando)
                     }
                 }
+            }
+            .alert("Error al guardar", isPresented: .init(
+                get: { errorGuardado != nil },
+                set: { if !$0 { errorGuardado = nil } }
+            )) {
+                Button("Aceptar", role: .cancel) {}
+            } message: {
+                Text(errorGuardado ?? "")
+            }
+        }
+    }
+
+    private func guardar() {
+        guardando = true
+        Task {
+            do {
+                if etapaExistente != nil {
+                    try await store.actualizarEtapa(borrador)
+                } else {
+                    _ = try await store.crearEtapa(borrador)
+                }
+                dismiss()
+            } catch {
+                errorGuardado = error.localizedDescription
+                guardando = false
             }
         }
     }
@@ -63,7 +99,7 @@ extension EtapaFormView {
     @ViewBuilder
     func encabezadoSection() -> some View {
         Section {
-            Label(etapa.tipo.nombre, systemImage: etapa.tipo.icono)
+            Label(borrador.tipo.nombre, systemImage: borrador.tipo.icono)
                 .font(.headline)
                 .foregroundStyle(.tint)
         }
@@ -73,15 +109,15 @@ extension EtapaFormView {
     func costesSection() -> some View {
         Section("Coste") {
             CurrencyField(label: "Previsto",
-                          value: Binding(get: { etapa.coste?.previsto ?? 0 },
+                          value: Binding(get: { borrador.coste?.previsto ?? 0 },
                                          set: { mutateCoste { $0.previsto = $1 }($0) }),
-                          currency: Binding(get: { etapa.coste?.moneda ?? "EUR" },
+                          currency: Binding(get: { borrador.coste?.moneda ?? "EUR" },
                                             set: { mutateCoste { $0.moneda = $1 }($0) }))
             CurrencyField(label: "Extras",
-                          value: Binding(get: { etapa.coste?.extras ?? 0 },
+                          value: Binding(get: { borrador.coste?.extras ?? 0 },
                                          set: { mutateCoste { $0.extras = $1 }($0) }),
-                          currency: .constant(etapa.coste?.moneda ?? "EUR"))
-            if let coste = etapa.coste, coste.total > 0 {
+                          currency: .constant(borrador.coste?.moneda ?? "EUR"))
+            if let coste = borrador.coste, coste.total > 0 {
                 HStack {
                     Text("Total")
                     Spacer()
@@ -96,19 +132,18 @@ extension EtapaFormView {
     func notasSection() -> some View {
         Section("Notas") {
             TextEditor(text: Binding(
-                get: { etapa.notas ?? "" },
-                set: { etapa.notas = $0.isEmpty ? nil : $0 }
+                get: { borrador.notas ?? "" },
+                set: { borrador.notas = $0.isEmpty ? nil : $0 }
             ))
             .frame(minHeight: 80)
         }
     }
 
-    // Helper: mutate optional Coste struct.
     private func mutateCoste<T>(_ fn: @escaping (inout Coste, T) -> Void) -> (T) -> Void {
         { value in
-            var c = etapa.coste ?? Coste()
+            var c = borrador.coste ?? Coste()
             fn(&c, value)
-            etapa.coste = c
+            borrador.coste = c
         }
     }
 }
@@ -121,16 +156,16 @@ extension EtapaFormView {
     func vueloSections() -> some View {
         DireccionSection(titulo: "Origen", direccion: origenBinding)
         Section {
-            DatePicker("Salida", selection: $etapa.fechaInicio,
+            DatePicker("Salida", selection: $borrador.fechaInicio,
                        displayedComponents: [.date, .hourAndMinute])
         }
         DireccionSection(titulo: "Destino", direccion: destinoBinding)
         Section {
             DatePicker("Llegada", selection: fechaFinBinding(default: Calendar.current.date(
-                byAdding: .hour, value: 2, to: etapa.fechaInicio) ?? etapa.fechaInicio),
+                byAdding: .hour, value: 2, to: borrador.fechaInicio) ?? borrador.fechaInicio),
                        displayedComponents: [.date, .hourAndMinute])
         }
-        if etapa.tipo.tieneReserva {
+        if borrador.tipo.tieneReserva {
             ReservaSection(reserva: reservaBinding)
         }
     }
@@ -141,12 +176,12 @@ extension EtapaFormView {
             TextField("Nombre del hotel", text: nombreBinding)
         }
         Section("Fechas") {
-            DatePicker("Entrada", selection: $etapa.fechaInicio, displayedComponents: .date)
+            DatePicker("Entrada", selection: $borrador.fechaInicio, displayedComponents: .date)
             DatePicker("Salida", selection: fechaFinBinding(default: Calendar.current.date(
-                byAdding: .day, value: 1, to: etapa.fechaInicio) ?? etapa.fechaInicio),
+                byAdding: .day, value: 1, to: borrador.fechaInicio) ?? borrador.fechaInicio),
                        displayedComponents: .date)
-            if let fin = etapa.fechaFin {
-                let noches = Calendar.current.dateComponents([.day], from: etapa.fechaInicio, to: fin).day ?? 0
+            if let fin = borrador.fechaFin {
+                let noches = Calendar.current.dateComponents([.day], from: borrador.fechaInicio, to: fin).day ?? 0
                 HStack {
                     Text("Noches")
                     Spacer()
@@ -163,22 +198,22 @@ extension EtapaFormView {
     func transporteSections() -> some View {
         DireccionSection(titulo: "Origen", direccion: origenBinding)
         Section {
-            DatePicker("Salida", selection: $etapa.fechaInicio,
+            DatePicker("Salida", selection: $borrador.fechaInicio,
                        displayedComponents: [.date, .hourAndMinute])
         }
         DireccionSection(titulo: "Destino", direccion: destinoBinding)
         Section {
             fechaFinToggle(label: "Llegada")
         }
-        if etapa.tipo == .coche || etapa.tipo == .barco {
+        if borrador.tipo == .coche || borrador.tipo == .barco {
             Section("Opciones") {
                 Toggle("Ruta circular", isOn: Binding(
-                    get: { etapa.rutaCircular ?? false },
-                    set: { etapa.rutaCircular = $0 }
+                    get: { borrador.rutaCircular ?? false },
+                    set: { borrador.rutaCircular = $0 }
                 ))
             }
         }
-        if etapa.tipo.tieneReserva {
+        if borrador.tipo.tieneReserva {
             ReservaSection(reserva: reservaBinding)
         }
     }
@@ -186,10 +221,10 @@ extension EtapaFormView {
     @ViewBuilder
     func foodDrinkSections() -> some View {
         Section {
-            TextField(etapa.tipo.etiquetaNombre, text: nombreBinding)
+            TextField(borrador.tipo.etiquetaNombre, text: nombreBinding)
         }
         Section("Fecha") {
-            DatePicker("Hora", selection: $etapa.fechaInicio,
+            DatePicker("Hora", selection: $borrador.fechaInicio,
                        displayedComponents: [.date, .hourAndMinute])
         }
         DireccionSection(titulo: "Dirección", direccion: direccionBinding)
@@ -198,10 +233,10 @@ extension EtapaFormView {
     @ViewBuilder
     func ocioSections() -> some View {
         Section {
-            TextField(etapa.tipo.etiquetaNombre, text: nombreBinding)
+            TextField(borrador.tipo.etiquetaNombre, text: nombreBinding)
         }
         Section("Fecha") {
-            DatePicker("Inicio", selection: $etapa.fechaInicio,
+            DatePicker("Inicio", selection: $borrador.fechaInicio,
                        displayedComponents: [.date, .hourAndMinute])
             fechaFinToggle(label: "Fin")
         }
@@ -211,10 +246,10 @@ extension EtapaFormView {
     @ViewBuilder
     func actividadSections() -> some View {
         Section {
-            TextField(etapa.tipo.etiquetaNombre, text: nombreBinding)
+            TextField(borrador.tipo.etiquetaNombre, text: nombreBinding)
         }
         Section("Fecha") {
-            DatePicker("Inicio", selection: $etapa.fechaInicio,
+            DatePicker("Inicio", selection: $borrador.fechaInicio,
                        displayedComponents: [.date, .hourAndMinute])
             fechaFinToggle(label: "Fin")
         }
@@ -227,43 +262,43 @@ extension EtapaFormView {
 extension EtapaFormView {
 
     var nombreBinding: Binding<String> {
-        Binding(get: { etapa.nombre ?? "" },
-                set: { etapa.nombre = $0.isEmpty ? nil : $0 })
+        Binding(get: { borrador.nombre ?? "" },
+                set: { borrador.nombre = $0.isEmpty ? nil : $0 })
     }
 
     var origenBinding: Binding<Direccion> {
-        Binding(get: { etapa.origen ?? Direccion() },
-                set: { etapa.origen = $0 })
+        Binding(get: { borrador.origen ?? Direccion() },
+                set: { borrador.origen = $0 })
     }
 
     var destinoBinding: Binding<Direccion> {
-        Binding(get: { etapa.destino ?? Direccion() },
-                set: { etapa.destino = $0 })
+        Binding(get: { borrador.destino ?? Direccion() },
+                set: { borrador.destino = $0 })
     }
 
     var direccionBinding: Binding<Direccion> {
-        Binding(get: { etapa.direccion ?? Direccion() },
-                set: { etapa.direccion = $0 })
+        Binding(get: { borrador.direccion ?? Direccion() },
+                set: { borrador.direccion = $0 })
     }
 
     var reservaBinding: Binding<Reserva> {
-        Binding(get: { etapa.reserva ?? Reserva() },
-                set: { etapa.reserva = $0 })
+        Binding(get: { borrador.reserva ?? Reserva() },
+                set: { borrador.reserva = $0 })
     }
 
     func fechaFinBinding(default defaultDate: Date) -> Binding<Date> {
-        Binding(get: { etapa.fechaFin ?? defaultDate },
-                set: { etapa.fechaFin = $0 })
+        Binding(get: { borrador.fechaFin ?? defaultDate },
+                set: { borrador.fechaFin = $0 })
     }
 
     @ViewBuilder
     func fechaFinToggle(label: String) -> some View {
         Toggle(label, isOn: Binding(
-            get: { etapa.fechaFin != nil },
-            set: { etapa.fechaFin = $0 ? (etapa.fechaFin ?? etapa.fechaInicio) : nil }
+            get: { borrador.fechaFin != nil },
+            set: { borrador.fechaFin = $0 ? (borrador.fechaFin ?? borrador.fechaInicio) : nil }
         ).animation())
-        if etapa.fechaFin != nil {
-            DatePicker(label, selection: fechaFinBinding(default: etapa.fechaInicio),
+        if borrador.fechaFin != nil {
+            DatePicker(label, selection: fechaFinBinding(default: borrador.fechaInicio),
                        displayedComponents: [.date, .hourAndMinute])
         }
     }
@@ -311,7 +346,6 @@ struct DireccionSection: View {
                 }
             }
 
-            // Manual entry as fallback.
             TextField("Nombre del lugar", text: $direccion.descripcion)
                 .font(.caption)
             TextField("Ciudad", text: $direccion.ciudad)

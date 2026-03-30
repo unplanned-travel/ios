@@ -4,6 +4,7 @@ import UIKit
 
 /// Wraps UICloudSharingController so it can be presented as a SwiftUI sheet.
 struct CloudSharingView: UIViewControllerRepresentable {
+    @Environment(CloudKitStore.self) var store
     let plan: Plan
 
     @Environment(\.dismiss) private var dismiss
@@ -12,10 +13,10 @@ struct CloudSharingView: UIViewControllerRepresentable {
         let controller = UICloudSharingController { _, completion in
             Task { @MainActor in
                 do {
-                    let (record, share) = try await CloudKitManager.shared.prepararShare(para: plan)
-                    let container = CKContainer(identifier: "iCloud.com.jaureguialzo.UnplannedTravel")
+                    let (record, share) = try await store.prepararShare(para: plan)
+                    let container = CKContainer(identifier: CloudKitStore.containerID)
                     completion(share, container, nil)
-                    _ = record  // suppress unused warning
+                    _ = record
                 } catch {
                     completion(nil, nil, error)
                 }
@@ -30,30 +31,18 @@ struct CloudSharingView: UIViewControllerRepresentable {
 
     func makeCoordinator() -> Coordinator { Coordinator(dismiss: dismiss) }
 
-    // MARK: - Coordinator
-
     final class Coordinator: NSObject, UICloudSharingControllerDelegate {
         let dismiss: DismissAction
         init(dismiss: DismissAction) { self.dismiss = dismiss }
 
-        func cloudSharingController(
-            _ csc: UICloudSharingController,
-            failedToSaveShareWithError error: Error
-        ) {
-            print("[CloudKit] Error al crear el recurso compartido: \(error.localizedDescription)")
+        func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
+            print("[CloudKit] Error al compartir: \(error.localizedDescription)")
             dismiss()
         }
 
-        func itemTitle(for csc: UICloudSharingController) -> String? {
-            nil  // Uses the CKShare title set in CloudKitManager.
-        }
+        func itemTitle(for csc: UICloudSharingController) -> String? { nil }
 
-        func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
-            dismiss()
-        }
-
-        func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
-            dismiss()
-        }
+        func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) { dismiss() }
+        func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) { dismiss() }
     }
 }

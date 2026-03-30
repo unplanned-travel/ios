@@ -1,10 +1,8 @@
 import SwiftUI
-import SwiftData
 import CloudKit
 
 struct PlanesView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Plan.fechaInicio) private var planes: [Plan]
+    @Environment(CloudKitStore.self) var store
 
     @State private var mostrarNuevoPlan = false
     @State private var urlPDF: URL?
@@ -14,22 +12,29 @@ struct PlanesView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(planes) { plan in
-                    NavigationLink(destination: PlanDetailView(plan: plan)) {
+                ForEach(store.planes) { plan in
+                    NavigationLink(destination: PlanDetailView(planID: plan.id)) {
                         PlanRowView(plan: plan)
                     }
                     .swipeActions(edge: .leading, allowsFullSwipe: false) {
                         Button {
-                            urlPDF = plan.generarPDF()
+                            urlPDF = plan.generarPDF(etapas: store.etapasOrdenadas(para: plan.id))
                             mostrarCompartir = true
                         } label: {
                             Label("Exportar", systemImage: "square.and.arrow.up")
                         }
                         .tint(.blue)
-                        .disabled(plan.etapas.isEmpty)
+                        .disabled(store.etapasPorPlan[plan.id]?.isEmpty ?? true)
                     }
                 }
-                .onDelete(perform: eliminarPlanes)
+                .onDelete { offsets in
+                    let targets = offsets.map { store.planes[$0] }
+                    Task {
+                        for plan in targets {
+                            try? await store.eliminarPlan(plan)
+                        }
+                    }
+                }
             }
             .navigationTitle("Unplanned")
             .toolbar {
@@ -41,7 +46,7 @@ struct PlanesView: View {
                 }
             }
             .overlay {
-                if planes.isEmpty {
+                if store.planes.isEmpty && !store.cargando {
                     ContentUnavailableView(
                         "Sin planes",
                         systemImage: "map",
@@ -49,6 +54,7 @@ struct PlanesView: View {
                     )
                 }
             }
+            .refreshable { await store.cargarDatos() }
         }
         .sheet(isPresented: $mostrarNuevoPlan) {
             PlanFormView()
@@ -60,18 +66,15 @@ struct PlanesView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .cloudKitShareAccepted)) { notification in
             guard let metadata = notification.object as? CKShare.Metadata else { return }
-            Task { @MainActor in
+            Task {
                 do {
-                    try await CloudKitManager.shared.aceptarYImportar(
-                        metadata: metadata,
-                        en: modelContext
-                    )
+                    try await store.aceptarShare(metadata: metadata)
                 } catch {
                     errorImport = error.localizedDescription
                 }
             }
         }
-        .alert("Error al aceptar la invitación", isPresented: Binding(
+        .alert("Error al aceptar la invitación", isPresented: .init(
             get: { errorImport != nil },
             set: { if !$0 { errorImport = nil } }
         )) {
@@ -80,10 +83,6 @@ struct PlanesView: View {
             Text(errorImport ?? "")
         }
     }
-
-    private func eliminarPlanes(at offsets: IndexSet) {
-        for index in offsets { modelContext.delete(planes[index]) }
-    }
 }
 
 struct PlanRowView: View {
@@ -91,25 +90,19 @@ struct PlanRowView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(plan.titulo.isEmpty ? "Sin título" : plan.titulo)
-                .font(.headline)
-            HStack(spacing: 8) {
-                if let inicio = plan.fechaInicio {
-                    Text(fechas(inicio, plan.fechaFin))
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-                Spacer()
+            HStack {
+                Text(plan.titulo.isEmpty ? "Sin título" : plan.titulo)
+                    .font(.headline)
                 if plan.estaCompartido {
-                    Image(systemName: "person.2.fill")
+                    Image(systemName: plan.esPropio ? "person.2.fill" : "person.fill.checkmark")
                         .font(.caption)
                         .foregroundStyle(.blue)
                 }
-                if !plan.etapas.isEmpty {
-                    Text("\(plan.etapas.count) etapas")
-                        .font(.caption)
-                        .foregroundStyle(.tertiary)
-                }
+            }
+            if let inicio = plan.fechaInicio {
+                Text(fechas(inicio, plan.fechaFin))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
             }
         }
         .padding(.vertical, 2)
@@ -128,5 +121,5 @@ struct PlanRowView: View {
 
 #Preview {
     PlanesView()
-        .modelContainer(for: [Plan.self, Etapa.self], inMemory: true)
+        .environment(CloudKitStore())
 }

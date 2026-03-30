@@ -1,8 +1,7 @@
 import SwiftUI
-import SwiftData
 
 struct PlanFormView: View {
-    @Environment(\.modelContext) private var modelContext
+    @Environment(CloudKitStore.self) var store
     @Environment(\.dismiss) private var dismiss
 
     var plan: Plan?
@@ -12,6 +11,8 @@ struct PlanFormView: View {
     @State private var fechaInicio = Date()
     @State private var fechaFin = Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date()
     @State private var notas = ""
+    @State private var guardando = false
+    @State private var errorGuardado: String?
 
     init(plan: Plan? = nil) {
         self.plan = plan
@@ -44,10 +45,18 @@ struct PlanFormView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Guardar") { guardar() }
-                        .disabled(titulo.trimmingCharacters(in: .whitespaces).isEmpty)
+                        .disabled(titulo.trimmingCharacters(in: .whitespaces).isEmpty || guardando)
                 }
             }
             .onAppear { cargarSiEdita() }
+            .alert("Error al guardar", isPresented: .init(
+                get: { errorGuardado != nil },
+                set: { if !$0 { errorGuardado = nil } }
+            )) {
+                Button("Aceptar", role: .cancel) {}
+            } message: {
+                Text(errorGuardado ?? "")
+            }
         }
     }
 
@@ -63,12 +72,24 @@ struct PlanFormView: View {
     }
 
     private func guardar() {
-        let p = plan ?? Plan()
-        p.titulo = titulo.trimmingCharacters(in: .whitespaces)
-        p.fechaInicio = conFechas ? fechaInicio : nil
-        p.fechaFin = conFechas ? fechaFin : nil
-        p.notas = notas.isEmpty ? nil : notas
-        if plan == nil { modelContext.insert(p) }
-        dismiss()
+        guardando = true
+        var borrador = plan ?? Plan()
+        borrador.titulo = titulo.trimmingCharacters(in: .whitespaces)
+        borrador.fechaInicio = conFechas ? fechaInicio : nil
+        borrador.fechaFin = conFechas ? fechaFin : nil
+        borrador.notas = notas.isEmpty ? nil : notas
+        Task {
+            do {
+                if plan == nil {
+                    _ = try await store.crearPlan(borrador)
+                } else {
+                    try await store.actualizarPlan(borrador)
+                }
+                dismiss()
+            } catch {
+                errorGuardado = error.localizedDescription
+                guardando = false
+            }
+        }
     }
 }

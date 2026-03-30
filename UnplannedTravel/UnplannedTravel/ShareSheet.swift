@@ -16,10 +16,9 @@ struct ShareSheet: UIViewControllerRepresentable {
 
 extension Plan {
     /// Renders this plan to a PDF file in the temp directory and returns its URL.
-    /// Must be called on @MainActor because ImageRenderer requires it.
     @MainActor
-    func generarPDF() -> URL {
-        let vista = PDFPlanView(plan: self)
+    func generarPDF(etapas: [Etapa]) -> URL {
+        let vista = PDFPlanView(plan: self, etapas: etapas)
         let renderer = ImageRenderer(content: vista)
         renderer.scale = 2.0  // Retina quality
 
