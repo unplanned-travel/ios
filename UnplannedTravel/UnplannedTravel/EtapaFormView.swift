@@ -335,8 +335,11 @@ struct DireccionSection: View {
             Button {
                 onBuscarEnMapa()
             } label: {
-                Label("Search on map", systemImage: "map")
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                Label(
+                    direccion.tieneCoordenadas ? "Show on map" : "Search on map",
+                    systemImage: direccion.tieneCoordenadas ? "mappin.and.ellipse" : "map"
+                )
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
 
             if !direccion.estaVacia {
@@ -358,12 +361,6 @@ struct DireccionSection: View {
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
-                        if direccion.tieneCoordenadas {
-                            Label("Coordinates saved", systemImage: "location.fill")
-                                .font(.caption2)
-                                .foregroundStyle(.tint)
-                                .padding(.top, 2)
-                        }
                     }
                     Spacer()
                     Button {
@@ -384,26 +381,6 @@ struct DireccionSection: View {
                 .font(.caption)
             TextField("Country", text: $direccion.pais)
                 .font(.caption)
-            if direccion.tieneCoordenadas {
-                HStack {
-                    Label("Lat", systemImage: "location")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    Text(String(format: "%.5f, %.5f", direccion.latitud!, direccion.longitud!))
-                        .font(.caption2.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                    Button {
-                        direccion.latitud = nil
-                        direccion.longitud = nil
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundStyle(.secondary)
-                            .font(.caption)
-                    }
-                    .buttonStyle(.plain)
-                }
-            }
         }
     }
 }

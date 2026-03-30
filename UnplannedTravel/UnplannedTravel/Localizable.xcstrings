@@ -1138,6 +1138,12 @@
         }
       }
     },
+    "Show on map" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Mostrar en el mapa" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Erakutsi mapan" } }
+      }
+    },
     "Search on map" : {
       "localizations" : {
         "es" : {

@@ -6,7 +6,7 @@ struct MapPickerView: View {
     @Binding var direccion: Direccion
     @Environment(\.dismiss) private var dismiss
 
-    @State private var position: MapCameraPosition = .automatic
+    @State private var position: MapCameraPosition
     @State private var searchText = ""
     @State private var suggestions: [MKMapItem] = []
     @State private var selectedItem: MKMapItem?
@@ -14,6 +14,21 @@ struct MapPickerView: View {
     @State private var featureSeleccionada: MapFeature?
     @State private var buscandoPOI = false
     @StateObject private var locationManager = LocationManager()
+
+    init(direccion: Binding<Direccion>) {
+        _direccion = direccion
+        // If coordinates already exist, open centered on them; otherwise automatic.
+        if let lat = direccion.wrappedValue.latitud,
+           let lon = direccion.wrappedValue.longitud {
+            _position = State(initialValue: .region(MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                latitudinalMeters: 500,
+                longitudinalMeters: 500
+            )))
+        } else {
+            _position = State(initialValue: .automatic)
+        }
+    }
 
     var body: some View {
         NavigationStack {
@@ -31,12 +46,23 @@ struct MapPickerView: View {
                 MapScaleView()
             }
             .task {
-                locationManager.requestLocation { coordinate in
-                    position = .region(MKCoordinateRegion(
-                        center: coordinate,
-                        latitudinalMeters: 400,
-                        longitudinalMeters: 400
-                    ))
+                // If the direccion already has a saved location, restore the marker.
+                if let lat = direccion.latitud, let lon = direccion.longitud {
+                    let coord = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                    let placemark = MKPlacemark(coordinate: coord)
+                    let item = MKMapItem(placemark: placemark)
+                    item.name = direccion.descripcion.isEmpty ? direccion.ciudad : direccion.descripcion
+                    selectedItem = item
+                    searchText = item.name ?? ""
+                } else {
+                    // No saved location: center on user position.
+                    locationManager.requestLocation { coordinate in
+                        position = .region(MKCoordinateRegion(
+                            center: coordinate,
+                            latitudinalMeters: 400,
+                            longitudinalMeters: 400
+                        ))
+                    }
                 }
             }
             .onChange(of: featureSeleccionada) { _, feature in
