@@ -24,6 +24,7 @@ struct PlanDetailView: View {
             ForEach(etapas) { etapa in
                 Button { etapaParaEditar = etapa } label: {
                     EtapaRowView(etapa: etapa)
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .contextMenu {
