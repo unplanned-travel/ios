@@ -38,7 +38,9 @@ struct PlanesView: View {
             }
             .navigationTitle("Unplanned")
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) { EditButton() }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    if !store.planes.isEmpty { EditButton() }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button { mostrarNuevoPlan = true } label: {
                         Image(systemName: "plus")
