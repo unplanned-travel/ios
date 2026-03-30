@@ -10,6 +10,9 @@ struct PlanDetailView: View {
     @State private var etapaParaCrear: Etapa?
     @State private var etapaParaEditar: Etapa?
     @State private var etapaParaMapa: Etapa?
+    @State private var generandoPDF = false
+    @State private var urlPDF: URL?
+    @State private var mostrarCompartir = false
 
     var body: some View {
         List {
@@ -46,6 +49,21 @@ struct PlanDetailView: View {
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    generandoPDF = true
+                    urlPDF = plan.generarPDF()
+                    mostrarCompartir = true
+                    generandoPDF = false
+                } label: {
+                    if generandoPDF {
+                        ProgressView()
+                    } else {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                }
+                .disabled(generandoPDF || plan.etapas.isEmpty)
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
                 EditButton()
             }
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -79,6 +97,11 @@ struct PlanDetailView: View {
         }
         .sheet(item: $etapaParaMapa) { etapa in
             EtapaMapView(etapa: etapa)
+        }
+        .sheet(isPresented: $mostrarCompartir) {
+            if let url = urlPDF {
+                ShareSheet(items: [url])
+            }
         }
         .sheet(isPresented: $mostrarEditarPlan) {
             PlanFormView(plan: plan)

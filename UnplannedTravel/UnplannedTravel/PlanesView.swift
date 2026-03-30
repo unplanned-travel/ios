@@ -6,6 +6,8 @@ struct PlanesView: View {
     @Query(sort: \Plan.fechaInicio) private var planes: [Plan]
 
     @State private var mostrarNuevoPlan = false
+    @State private var urlPDF: URL?
+    @State private var mostrarCompartir = false
 
     var body: some View {
         NavigationStack {
@@ -13,6 +15,16 @@ struct PlanesView: View {
                 ForEach(planes) { plan in
                     NavigationLink(destination: PlanDetailView(plan: plan)) {
                         PlanRowView(plan: plan)
+                    }
+                    .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                        Button {
+                            urlPDF = plan.generarPDF()
+                            mostrarCompartir = true
+                        } label: {
+                            Label("Exportar", systemImage: "square.and.arrow.up")
+                        }
+                        .tint(.blue)
+                        .disabled(plan.etapas.isEmpty)
                     }
                 }
                 .onDelete(perform: eliminarPlanes)
@@ -38,6 +50,11 @@ struct PlanesView: View {
         }
         .sheet(isPresented: $mostrarNuevoPlan) {
             PlanFormView()
+        }
+        .sheet(isPresented: $mostrarCompartir) {
+            if let url = urlPDF {
+                ShareSheet(items: [url])
+            }
         }
     }
 
