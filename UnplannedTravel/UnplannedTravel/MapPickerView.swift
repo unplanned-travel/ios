@@ -192,8 +192,6 @@ struct MapPickerView: View {
             suggestions = Array(response.mapItems.prefix(8))
             if response.mapItems.count == 1, let first = response.mapItems.first {
                 seleccionar(first)
-            } else {
-                position = .region(response.boundingRegion)
             }
         }
     }
