@@ -2,46 +2,38 @@ import SwiftUI
 import CloudKit
 import UIKit
 
-/// Wraps UICloudSharingController so it can be presented as a SwiftUI sheet.
-/// UICloudSharingController must be presented from a real UIViewController in viewDidAppear
-/// to have a valid window, otherwise it renders blank.
+/// Zero-size UIViewControllerRepresentable that presents UICloudSharingController
+/// directly on the top-most UIViewController — no SwiftUI sheet involved,
+/// so there is only one presentation/dismissal animation.
 struct CloudSharingView: UIViewControllerRepresentable {
-    @Environment(CloudKitStore.self) var store
+    @Binding var isPresented: Bool
     let plan: Plan
-    @Environment(\.dismiss) private var dismiss
+    @Environment(CloudKitStore.self) var store
 
-    func makeCoordinator() -> Coordinator { Coordinator(store: store, plan: plan, dismiss: dismiss) }
-
-    func makeUIViewController(context: Context) -> ContainerVC {
-        let vc = ContainerVC()
-        vc.coordinator = context.coordinator
-        return vc
+    func makeCoordinator() -> Coordinator {
+        Coordinator(store: store, plan: plan, setPresented: { isPresented = $0 })
     }
 
-    func updateUIViewController(_ uiViewController: ContainerVC, context: Context) {}
+    func makeUIViewController(context: Context) -> UIViewController { UIViewController() }
 
-    // MARK: - Container VC
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        let coordinator = context.coordinator
+        coordinator.store = store        // refresh in case environment changes
 
-    final class ContainerVC: UIViewController {
-        weak var coordinator: Coordinator?
-
-        override func viewDidAppear(_ animated: Bool) {
-            super.viewDidAppear(animated)
-            guard let coordinator, !coordinator.presented else { return }
+        if isPresented && !coordinator.presented {
             coordinator.presented = true
-
-            Task { @MainActor [weak self] in
-                guard let self else { return }
+            Task { @MainActor in
+                guard let topVC = UIViewController.top() else {
+                    coordinator.close(); return
+                }
                 do {
                     let csc: UICloudSharingController
-                    if coordinator.store.tieneShareLocal(plan: coordinator.plan) {
-                        // Share already exists — use management initializer.
-                        guard let (share, container) = try await coordinator.store.fetchShareExistente(para: coordinator.plan) else {
-                            coordinator.dismiss(); return
+                    if coordinator.store.tieneShareLocal(plan: plan) {
+                        guard let (share, container) = try await coordinator.store.fetchShareExistente(para: plan) else {
+                            coordinator.close(); return
                         }
                         csc = UICloudSharingController(share: share, container: container)
                     } else {
-                        // No share yet — create it inside the preparationHandler.
                         csc = UICloudSharingController { [weak coordinator] _, completion in
                             guard let coordinator else { return }
                             Task { @MainActor in
@@ -56,21 +48,11 @@ struct CloudSharingView: UIViewControllerRepresentable {
                     }
                     csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
                     csc.delegate = coordinator
-                    self.present(csc, animated: true)
-                    coordinator.sharingPresented = true
+                    topVC.present(csc, animated: true)
                 } catch {
                     print("[CloudKit] Error preparando share: \(error.localizedDescription)")
-                    coordinator.dismiss()
+                    coordinator.close()
                 }
-            }
-        }
-
-        // Called when UICloudSharingController is dismissed without triggering a delegate method
-        // (e.g. tapping "Done"/"Cancel"). Close the outer SwiftUI sheet too.
-        override func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-            if coordinator?.sharingPresented == true {
-                coordinator?.dismiss()
             }
         }
     }
@@ -78,28 +60,45 @@ struct CloudSharingView: UIViewControllerRepresentable {
     // MARK: - Coordinator
 
     final class Coordinator: NSObject, UICloudSharingControllerDelegate {
-        let store: CloudKitStore
+        var store: CloudKitStore
         let plan: Plan
-        let dismiss: DismissAction
+        private let setPresented: (Bool) -> Void
         var presented = false
-        var sharingPresented = false
 
-        init(store: CloudKitStore, plan: Plan, dismiss: DismissAction) {
+        init(store: CloudKitStore, plan: Plan, setPresented: @escaping (Bool) -> Void) {
             self.store = store
             self.plan = plan
-            self.dismiss = dismiss
+            self.setPresented = setPresented
         }
 
-        func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
-            print("[CloudKit] Error al compartir: \(error.localizedDescription)")
-            dismiss()
+        func close() {
+            presented = false
+            setPresented(false)
         }
 
         func itemTitle(for csc: UICloudSharingController) -> String? {
             plan.titulo.isEmpty ? nil : plan.titulo
         }
 
-        func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) { dismiss() }
-        func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) { dismiss() }
+        func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
+            print("[CloudKit] Error al compartir: \(error.localizedDescription)")
+            close()
+        }
+
+        func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) { close() }
+        func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) { close() }
+    }
+}
+
+private extension UIViewController {
+    /// Returns the topmost presented UIViewController in the key window.
+    static func top() -> UIViewController? {
+        guard let root = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .flatMap({ $0.windows })
+            .first(where: { $0.isKeyWindow })?.rootViewController else { return nil }
+        var top = root
+        while let presented = top.presentedViewController { top = presented }
+        return top
     }
 }

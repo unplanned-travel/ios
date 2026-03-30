@@ -125,11 +125,14 @@ struct PlanDetailView: View {
         .sheet(item: $etapaParaMapa) { etapa in
             EtapaMapView(etapa: etapa)
         }
-        .sheet(isPresented: $mostrarCompartirICloud) {
-            if let plan { CloudSharingView(plan: plan) }
-        }
         .sheet(isPresented: $mostrarCompartir) {
             if let url = urlPDF { ShareSheet(items: [url]) }
+        }
+        .background {
+            if let plan, mostrarCompartirICloud {
+                CloudSharingView(isPresented: $mostrarCompartirICloud, plan: plan)
+                    .frame(width: 0, height: 0)
+            }
         }
         .sheet(isPresented: $mostrarEditarPlan) {
             if let plan { PlanFormView(plan: plan) }
