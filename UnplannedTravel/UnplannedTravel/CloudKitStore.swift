@@ -296,10 +296,22 @@ final class CloudKitStore {
     // MARK: - Sharing
 
     func crearNuevoShare(para plan: Plan) async throws -> (CKShare, CKContainer) {
-        guard let record = planRecords[plan.id] else {
+        guard let cachedRecord = planRecords[plan.id] else {
             throw NSError(domain: "CloudKitStore", code: 1,
                          userInfo: [NSLocalizedDescriptionKey: "Record not found in local cache"])
         }
+
+        // Fetch the latest version from the server to avoid "Atomic failure" / stale recordChangeTag.
+        let record: CKRecord
+        do {
+            record = try await privateDB.record(for: cachedRecord.recordID)
+            planRecords[plan.id] = record
+        } catch {
+            // If fetch fails (e.g. record not on server yet), use cached version.
+            print("[CloudKit] ⚠️ No se pudo obtener record fresco, usando caché: \(error)")
+            record = cachedRecord
+        }
+
         let share = CKShare(rootRecord: record)
         share[CKShare.SystemFieldKey.title] = (plan.titulo.isEmpty ? "Trip" : plan.titulo) as CKRecordValue
 
