@@ -14,7 +14,8 @@ struct PlanDetailView: View {
     @State private var etapaParaEditar: Etapa?
     @State private var etapaParaMapa: Etapa?
     @State private var mostrarEditarPlan = false
-    @State private var mostrarCompartirICloud = false
+    @State private var shareActivo: SharePresentation?
+    @State private var preparandoShare = false
     @State private var mostrarCompartir = false
     @State private var generandoPDF = false
     @State private var urlPDF: URL?
@@ -68,10 +69,25 @@ struct PlanDetailView: View {
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button { mostrarCompartirICloud = true } label: {
-                    Image(systemName: plan?.estaCompartido == true ? "person.2.fill" : "person.badge.plus")
+                Button {
+                    guard let plan else { return }
+                    preparandoShare = true
+                    Task {
+                        do {
+                            shareActivo = SharePresentation(share: try await store.obtenerOCrearShare(para: plan))
+                        } catch {
+                            errorCompartir = error.localizedDescription
+                        }
+                        preparandoShare = false
+                    }
+                } label: {
+                    if preparandoShare {
+                        ProgressView()
+                    } else {
+                        Image(systemName: plan?.estaCompartido == true ? "person.2.fill" : "person.badge.plus")
+                    }
                 }
-                .disabled(etapas.isEmpty || plan?.esPropio == false)
+                .disabled(etapas.isEmpty || plan?.esPropio == false || preparandoShare)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -129,11 +145,9 @@ struct PlanDetailView: View {
         .sheet(isPresented: $mostrarCompartir) {
             if let url = urlPDF { ShareSheet(items: [url]) }
         }
-        .background {
-            if let plan, mostrarCompartirICloud {
-                CloudSharingView(isPresented: $mostrarCompartirICloud, plan: plan,
-                                 onError: { errorCompartir = $0 })
-                    .frame(width: 0, height: 0)
+        .sheet(item: $shareActivo) { presentation in
+            if let plan {
+                ShareManagementView(plan: plan, share: presentation.share)
             }
         }
         .alert("Error sharing", isPresented: .init(
