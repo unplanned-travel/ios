@@ -37,6 +37,30 @@
         }
       }
     },
+    "NSContactsUsageDescription" : {
+      "comment" : "Contacts permission for iCloud sharing suggestions",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contacts are used to suggest people to share your trips with via iCloud."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se usan los contactos para sugerir personas con las que compartir tus viajes mediante iCloud."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kontaktuak iClouden bidez bidaiak partekatzeko pertsonak iradokitzeko erabiltzen dira."
+          }
+        }
+      }
+    },
     "NSLocationWhenInUseUsageDescription" : {
       "comment" : "Location permission prompt",
       "extractionState" : "extracted_with_value",
