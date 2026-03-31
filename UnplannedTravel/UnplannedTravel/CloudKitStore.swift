@@ -398,7 +398,7 @@ final class CloudKitStore: ObservableObject {
 
     // MARK: - Share participant management
 
-    func agregarParticipante(email: String, permiso: CKShare.Participant.Permission, a share: CKShare) async throws -> CKShare {
+    func agregarParticipante(email: String, permiso: CKShare.ParticipantPermission, a share: CKShare) async throws -> CKShare {
         let participante: CKShare.Participant = try await withCheckedThrowingContinuation { cont in
             ckContainer.fetchShareParticipant(withEmailAddress: email) { p, error in
                 if let error { cont.resume(throwing: error) }
@@ -416,7 +416,7 @@ final class CloudKitStore: ObservableObject {
         return try await guardarShare(share)
     }
 
-    func actualizarAccesoPublico(_ permiso: CKShare.Participant.Permission, en share: CKShare) async throws -> CKShare {
+    func actualizarAccesoPublico(_ permiso: CKShare.ParticipantPermission, en share: CKShare) async throws -> CKShare {
         share.publicPermission = permiso
         return try await guardarShare(share)
     }

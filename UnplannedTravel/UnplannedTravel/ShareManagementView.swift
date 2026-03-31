@@ -115,16 +115,16 @@ struct ShareManagementView: View {
         Section(String(localized: "share.section.access")) {
             Picker(String(localized: "share.access.label"), selection: permisoPublicoBinding) {
                 Text(String(localized: "share.access.invited"))
-                    .tag(CKShare.Participant.Permission.none)
+                    .tag(CKShare.ParticipantPermission.none)
                 Text(String(localized: "share.access.anyoneReadOnly"))
-                    .tag(CKShare.Participant.Permission.readOnly)
+                    .tag(CKShare.ParticipantPermission.readOnly)
                 Text(String(localized: "share.access.anyoneReadWrite"))
-                    .tag(CKShare.Participant.Permission.readWrite)
+                    .tag(CKShare.ParticipantPermission.readWrite)
             }
         }
     }
 
-    private var permisoPublicoBinding: Binding<CKShare.Participant.Permission> {
+    private var permisoPublicoBinding: Binding<CKShare.ParticipantPermission> {
         Binding(
             get: { share.publicPermission },
             set: { actualizarAcceso($0) }
@@ -177,7 +177,7 @@ struct ShareManagementView: View {
 
     // MARK: - Actions
 
-    private func actualizarAcceso(_ permiso: CKShare.Participant.Permission) {
+    private func actualizarAcceso(_ permiso: CKShare.ParticipantPermission) {
         guardando = true
         Task {
             do {
@@ -257,7 +257,7 @@ struct AgregarParticipanteView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var email = ""
-    @State private var permiso: CKShare.Participant.Permission = .readWrite
+    @State private var permiso: CKShare.ParticipantPermission = .readWrite
     @State private var buscando = false
     @State private var error: String?
 
@@ -276,9 +276,9 @@ struct AgregarParticipanteView: View {
                 Section(String(localized: "share.section.permission")) {
                     Picker(String(localized: "share.permission.label"), selection: $permiso) {
                         Text(String(localized: "share.role.readOnly"))
-                            .tag(CKShare.Participant.Permission.readOnly)
+                            .tag(CKShare.ParticipantPermission.readOnly)
                         Text(String(localized: "share.role.readWrite"))
-                            .tag(CKShare.Participant.Permission.readWrite)
+                            .tag(CKShare.ParticipantPermission.readWrite)
                     }
                     .pickerStyle(.segmented)
                 }
