@@ -52,9 +52,8 @@ struct MapPickerView: View {
             .task {
                 // If the direccion already has a saved location, restore the marker.
                 if let lat = direccion.latitud, let lon = direccion.longitud {
-                    let coord = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-                    let placemark = MKPlacemark(coordinate: coord)
-                    let item = MKMapItem(placemark: placemark)
+                    let location = CLLocation(latitude: lat, longitude: lon)
+                    let item = MKMapItem(location: location, address: nil)
                     item.name = direccion.descripcion.isEmpty ? direccion.ciudad : direccion.descripcion
                     selectedItem = item
                     searchText = item.name ?? ""
@@ -92,7 +91,8 @@ struct MapPickerView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(item.name ?? "")
                                     .foregroundStyle(.primary)
-                                if let subtitulo = item.placemark.title, subtitulo != item.name {
+                                if let subtitulo = item.address?.shortAddress ?? item.address?.fullAddress,
+                                   subtitulo != item.name {
                                     Text(subtitulo)
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
@@ -159,14 +159,15 @@ struct MapPickerView: View {
 
             if let response = try? await MKLocalSearch(request: request).start(),
                let match = response.mapItems.min(by: {
-                   distancia($0.placemark.coordinate, feature.coordinate) <
-                   distancia($1.placemark.coordinate, feature.coordinate)
+                   distancia($0.location.coordinate, feature.coordinate) <
+                   distancia($1.location.coordinate, feature.coordinate)
                }) {
                 seleccionar(match)
             } else {
                 // Fallback: build a minimal item from the feature itself
-                let placemark = MKPlacemark(coordinate: feature.coordinate)
-                let item = MKMapItem(placemark: placemark)
+                let location = CLLocation(latitude: feature.coordinate.latitude,
+                                         longitude: feature.coordinate.longitude)
+                let item = MKMapItem(location: location, address: nil)
                 item.name = feature.title
                 seleccionar(item)
             }
@@ -203,37 +204,29 @@ struct MapPickerView: View {
         featureSeleccionada = nil
         searchText = item.name ?? ""
         suggestions = []
-        if let coord = item.placemark.location?.coordinate {
-            position = .region(MKCoordinateRegion(
-                center: coord,
-                latitudinalMeters: 500,
-                longitudinalMeters: 500
-            ))
-        }
+        let coord = item.location.coordinate
+        position = .region(MKCoordinateRegion(
+            center: coord,
+            latitudinalMeters: 500,
+            longitudinalMeters: 500
+        ))
     }
 
     private func aplicar() {
         guard let item = selectedItem else { return }
-        let p = item.placemark
-        direccion.descripcion = item.name ?? p.name ?? ""
-        direccion.direccionCompleta = formatearDireccion(p)
-        direccion.ciudad = p.locality ?? p.administrativeArea ?? ""
-        direccion.pais = p.country ?? ""
-        direccion.latitud = p.coordinate.latitude
-        direccion.longitud = p.coordinate.longitude
+        let addr = item.address
+        let repr = item.addressRepresentations
+        direccion.descripcion = item.name ?? ""
+        direccion.direccionCompleta = addr?.fullAddress
+            ?? repr?.fullAddress(includingRegion: true, singleLine: true)
+            ?? ""
+        direccion.ciudad = repr?.cityName ?? ""
+        direccion.pais = repr?.regionName ?? ""
+        let coord = item.location.coordinate
+        direccion.latitud = coord.latitude
+        direccion.longitud = coord.longitude
         direccion.radioMetros = radioActual
         dismiss()
-    }
-
-    private func formatearDireccion(_ p: MKPlacemark) -> String {
-        let numero = p.subThoroughfare ?? ""
-        let calle  = p.thoroughfare ?? ""
-        let cp     = p.postalCode ?? ""
-        let ciudad = p.locality ?? p.administrativeArea ?? ""
-
-        let linea1 = [calle, numero].filter { !$0.isEmpty }.joined(separator: " ")
-        let linea2 = [cp, ciudad].filter { !$0.isEmpty }.joined(separator: " ")
-        return [linea1, linea2].filter { !$0.isEmpty }.joined(separator: ", ")
     }
 
     // MARK: - Sub-views
@@ -252,13 +245,11 @@ struct MapPickerView: View {
                     Text(item.name ?? "Selected location")
                         .font(.headline)
 
-                    let partes = [
-                        item.placemark.thoroughfare,
-                        item.placemark.locality,
-                        item.placemark.country
-                    ].compactMap { $0 }.joined(separator: ", ")
-                    if !partes.isEmpty {
-                        Text(partes)
+                    let subtitulo = item.address?.shortAddress
+                        ?? item.addressRepresentations?.cityWithContext
+                        ?? ""
+                    if !subtitulo.isEmpty {
+                        Text(subtitulo)
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
