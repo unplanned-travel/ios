@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PlanFormView: View {
-    @Environment(CloudKitStore.self) var store
+    @EnvironmentObject var store: CloudKitStore
     @Environment(\.dismiss) private var dismiss
 
     var plan: Plan?

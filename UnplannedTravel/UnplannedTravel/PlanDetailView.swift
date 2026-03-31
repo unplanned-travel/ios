@@ -2,7 +2,7 @@ import SwiftUI
 import CloudKit
 
 struct PlanDetailView: View {
-    @Environment(CloudKitStore.self) var store
+    @EnvironmentObject var store: CloudKitStore
     let planID: CKRecord.ID
 
     private var plan: Plan? { store.planes.first { $0.id == planID } }
@@ -119,11 +119,7 @@ struct PlanDetailView: View {
         }
         .overlay {
             if etapas.isEmpty {
-                ContentUnavailableView(
-                    "No stages",
-                    systemImage: "list.bullet.clipboard",
-                    description: Text("Add the first stage with the + button")
-                )
+                UnavailableView(title: "No stages", systemImage: "list.bullet.clipboard", description: "Add the first stage with the + button")
             }
         }
         .sheet(isPresented: $mostrarPicker) {

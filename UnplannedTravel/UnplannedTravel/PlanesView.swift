@@ -2,7 +2,7 @@ import SwiftUI
 import CloudKit
 
 struct PlanesView: View {
-    @Environment(CloudKitStore.self) var store
+    @EnvironmentObject var store: CloudKitStore
 
     @State private var mostrarNuevoPlan = false
     @State private var urlPDF: URL?
@@ -49,17 +49,9 @@ struct PlanesView: View {
             }
             .overlay {
                 if !store.cuentaDisponible, let msg = store.errorMensaje {
-                    ContentUnavailableView(
-                        "iCloud Required",
-                        systemImage: "icloud.slash",
-                        description: Text(msg)
-                    )
+                    UnavailableView(title: "iCloud Required", systemImage: "icloud.slash", description: msg)
                 } else if store.planes.isEmpty && !store.cargando {
-                    ContentUnavailableView(
-                        "No plans",
-                        systemImage: "map",
-                        description: Text("Add your first trip with the + button")
-                    )
+                    UnavailableView(title: "No plans", systemImage: "map", description: "Add your first trip with the + button")
                 }
             }
             .refreshable { await store.cargarDatos() }
@@ -142,5 +134,5 @@ struct PlanRowView: View {
 
 #Preview {
     PlanesView()
-        .environment(CloudKitStore())
+        .environmentObject(CloudKitStore())
 }

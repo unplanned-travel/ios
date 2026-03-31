@@ -9,7 +9,7 @@ struct SharePresentation: Identifiable {
 struct ShareManagementView: View {
     let plan: Plan
     let share: CKShare
-    @Environment(CloudKitStore.self) var store
+    @EnvironmentObject var store: CloudKitStore
     @Environment(\.dismiss) var dismiss
 
     @State private var enlaceCopied = false

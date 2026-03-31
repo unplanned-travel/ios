@@ -9,7 +9,7 @@ struct CloudSharingView: UIViewControllerRepresentable {
     @Binding var isPresented: Bool
     let plan: Plan
     var onError: ((String) -> Void)? = nil
-    @Environment(CloudKitStore.self) var store
+    @EnvironmentObject var store: CloudKitStore
 
     func makeCoordinator() -> Coordinator {
         Coordinator(store: store, plan: plan, setPresented: { isPresented = $0 }, onError: onError)

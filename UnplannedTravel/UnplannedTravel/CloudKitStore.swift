@@ -1,9 +1,8 @@
 import CloudKit
-import Observation
+import Combine
 
-@Observable
 @MainActor
-final class CloudKitStore {
+final class CloudKitStore: ObservableObject {
 
     // MARK: - Singleton (for AppDelegate access)
 
@@ -17,11 +16,11 @@ final class CloudKitStore {
 
     // MARK: - Published state
 
-    var planes: [Plan] = []
-    var etapasPorPlan: [CKRecord.ID: [Etapa]] = [:]
-    var cargando = false
-    var errorMensaje: String?
-    var cuentaDisponible = false
+    @Published var planes: [Plan] = []
+    @Published var etapasPorPlan: [CKRecord.ID: [Etapa]] = [:]
+    @Published var cargando = false
+    @Published var errorMensaje: String?
+    @Published var cuentaDisponible = false
 
     // MARK: - CloudKit
 

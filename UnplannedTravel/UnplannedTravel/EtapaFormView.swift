@@ -4,7 +4,7 @@ import CloudKit
 // MARK: - Main form
 
 struct EtapaFormView: View {
-    @Environment(CloudKitStore.self) var store
+    @EnvironmentObject var store: CloudKitStore
     @Environment(\.dismiss) private var dismiss
 
     let planID: CKRecord.ID

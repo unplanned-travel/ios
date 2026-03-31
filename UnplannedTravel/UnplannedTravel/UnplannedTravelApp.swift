@@ -10,12 +10,12 @@ import SwiftUI
 @main
 struct UnplannedTravelApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @State private var store = CloudKitStore()
+    @StateObject private var store = CloudKitStore()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(store)
+                .environmentObject(store)
         }
     }
 }
