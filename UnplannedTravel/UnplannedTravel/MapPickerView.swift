@@ -19,7 +19,6 @@ struct MapPickerView: View {
     @State private var selectedItem: MKMapItem?
     @State private var searchTask: Task<Void, Never>?
     @State private var buscandoPOI = false
-    @State private var radioActual: Double = 400
     @StateObject private var locationManager = LocationManager()
 
     private static let radioDefecto: Double = 400
@@ -34,7 +33,7 @@ struct MapPickerView: View {
                 latitudinalMeters: radio,
                 longitudinalMeters: radio
             ))
-            _radioActual = State(initialValue: radio)
+
         } else {
             _region = State(initialValue: MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
@@ -56,9 +55,7 @@ struct MapPickerView: View {
                 annotationItems: annotationItems) { wrapper in
                 MapMarker(coordinate: wrapper.coordinate, tint: .red)
             }
-            .onChange(of: region) { newRegion in
-                radioActual = newRegion.span.latitudeDelta * 111_000
-            }
+
             .task {
                 if let lat = direccion.latitud, let lon = direccion.longitud {
                     let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon))
@@ -183,7 +180,7 @@ struct MapPickerView: View {
         let coord = placemark.coordinate
         direccion.latitud = coord.latitude
         direccion.longitud = coord.longitude
-        direccion.radioMetros = radioActual
+        direccion.radioMetros = region.span.latitudeDelta * 111_000
         dismiss()
     }
 
