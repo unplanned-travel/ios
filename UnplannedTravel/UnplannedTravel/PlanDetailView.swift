@@ -39,7 +39,17 @@ struct PlanDetailView: View {
                 if let url = urlPDF { ShareSheet(items: [url]) }
             }
             .sheet(item: $shareActivo) { presentation in
-                if let plan { ShareManagementView(plan: plan, share: presentation.share) }
+                if let p = plan {
+                    DirectSharingView(
+                        plan: p,
+                        share: presentation.share,
+                        container: store.ckContainer,
+                        onDismiss: { shareActivo = nil },
+                        onStopSharing: {
+                            Task { await store.actualizarTrasDetenerShare(para: p) }
+                        }
+                    )
+                }
             }
             .sheet(isPresented: $mostrarEditarPlan) {
                 if let plan { PlanFormView(plan: plan) }
