@@ -18,7 +18,7 @@ struct CloudSharingView: UIViewControllerRepresentable {
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
         let coordinator = context.coordinator
-        coordinator.store = store        // refresh in case environment changes
+        coordinator.store = store
 
         if isPresented && !coordinator.presented {
             coordinator.presented = true
@@ -28,8 +28,6 @@ struct CloudSharingView: UIViewControllerRepresentable {
                 }
                 do {
                     let csc: UICloudSharingController
-                    // Always pre-save the share then use init(share:container:).
-                    // UICloudSharingController(preparationHandler:) is deprecated since iOS 17.
                     if coordinator.store.tieneShareLocal(plan: plan),
                        let (share, container) = try await coordinator.store.fetchShareExistente(para: plan) {
                         csc = UICloudSharingController(share: share, container: container)
@@ -39,9 +37,19 @@ struct CloudSharingView: UIViewControllerRepresentable {
                     }
                     csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
                     csc.delegate = coordinator
+
+                    // Embed a zero-size child observer that fires close() whenever
+                    // the CSC disappears — covers Done button (programmatic dismiss),
+                    // swipe-to-dismiss, and any other dismissal path.
+                    let observer = DismissObserverVC { [weak coordinator] in
+                        coordinator?.close()
+                    }
+                    csc.addChild(observer)
+                    observer.view.frame = .zero
+                    csc.view.addSubview(observer.view)
+                    observer.didMove(toParent: csc)
+
                     topVC.present(csc, animated: true)
-                    // Catch dismissal via "Done" which doesn't trigger any delegate method.
-                    csc.presentationController?.delegate = coordinator
                 } catch {
                     print("[CloudKit] Error preparando share: \(error.localizedDescription)")
                     coordinator.close()
@@ -50,9 +58,31 @@ struct CloudSharingView: UIViewControllerRepresentable {
         }
     }
 
+    // MARK: - Dismiss observer
+
+    /// Zero-size child VC added to UICloudSharingController.
+    /// viewDidDisappear fires whenever the parent is dismissed — including
+    /// programmatic dismissal from the Done button.
+    private final class DismissObserverVC: UIViewController {
+        private let onDismiss: () -> Void
+        init(onDismiss: @escaping () -> Void) {
+            self.onDismiss = onDismiss
+            super.init(nibName: nil, bundle: nil)
+        }
+        required init?(coder: NSCoder) { fatalError() }
+
+        override func viewDidDisappear(_ animated: Bool) {
+            super.viewDidDisappear(animated)
+            // parent?.isBeingDismissed covers both interactive and programmatic dismissal.
+            if parent?.isBeingDismissed == true {
+                onDismiss()
+            }
+        }
+    }
+
     // MARK: - Coordinator
 
-    final class Coordinator: NSObject, UICloudSharingControllerDelegate, UIAdaptivePresentationControllerDelegate {
+    final class Coordinator: NSObject, UICloudSharingControllerDelegate {
         var store: CloudKitStore
         let plan: Plan
         private let setPresented: (Bool) -> Void
@@ -65,6 +95,7 @@ struct CloudSharingView: UIViewControllerRepresentable {
         }
 
         func close() {
+            guard presented else { return }
             presented = false
             setPresented(false)
         }
@@ -80,11 +111,6 @@ struct CloudSharingView: UIViewControllerRepresentable {
 
         func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) { close() }
         func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) { close() }
-
-        // Called when the user dismisses the sheet without making changes (e.g. "Done").
-        func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-            close()
-        }
     }
 }
 
