@@ -28,23 +28,14 @@ struct CloudSharingView: UIViewControllerRepresentable {
                 }
                 do {
                     let csc: UICloudSharingController
-                    if coordinator.store.tieneShareLocal(plan: plan) {
-                        guard let (share, container) = try await coordinator.store.fetchShareExistente(para: plan) else {
-                            coordinator.close(); return
-                        }
+                    // Always pre-save the share then use init(share:container:).
+                    // UICloudSharingController(preparationHandler:) is deprecated since iOS 17.
+                    if coordinator.store.tieneShareLocal(plan: plan),
+                       let (share, container) = try await coordinator.store.fetchShareExistente(para: plan) {
                         csc = UICloudSharingController(share: share, container: container)
                     } else {
-                        csc = UICloudSharingController { [weak coordinator] _, completion in
-                            guard let coordinator else { return }
-                            Task { @MainActor in
-                                do {
-                                    let (share, container) = try await coordinator.store.crearNuevoShare(para: coordinator.plan)
-                                    completion(share, container, nil)
-                                } catch {
-                                    completion(nil, nil, error)
-                                }
-                            }
-                        }
+                        let (share, container) = try await coordinator.store.crearNuevoShare(para: plan)
+                        csc = UICloudSharingController(share: share, container: container)
                     }
                     csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
                     csc.delegate = coordinator

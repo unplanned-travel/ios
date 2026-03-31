@@ -151,8 +151,9 @@ struct EtapaMapView: View {
 
     private func abrirEnMapas() {
         let items = anotaciones.map { punto -> MKMapItem in
-            let placemark = MKPlacemark(coordinate: punto.coordenada)
-            let item = MKMapItem(placemark: placemark)
+            let location = CLLocation(latitude: punto.coordenada.latitude,
+                                      longitude: punto.coordenada.longitude)
+            let item = MKMapItem(location: location, address: nil)
             item.name = punto.nombre
             return item
         }
