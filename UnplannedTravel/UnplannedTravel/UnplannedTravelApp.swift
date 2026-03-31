@@ -17,6 +17,5 @@ struct UnplannedTravelApp: App {
             ContentView()
                 .environment(store)
         }
-        .handlesExternalEvents(matching: ["*"])
     }
 }

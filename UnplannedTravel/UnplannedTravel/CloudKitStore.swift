@@ -306,6 +306,12 @@ final class CloudKitStore {
         let results = try await privateDB.modifyRecords(saving: [record, share], deleting: [])
         let savedShare = results.saveResults.values.compactMap { try? $0.get() as? CKShare }.first ?? share
 
+        if let url = savedShare.url {
+            print("[CloudKit] Share creado — URL: \(url)")
+        } else {
+            print("[CloudKit] ⚠️ Share guardado pero sin URL — el enlace no será válido")
+        }
+
         // Store the server-returned Plan record so record.share reference is set correctly.
         if let savedRecord = try? results.saveResults[record.recordID]?.get() {
             planRecords[plan.id] = savedRecord
