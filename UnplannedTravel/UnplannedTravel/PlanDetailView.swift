@@ -18,6 +18,7 @@ struct PlanDetailView: View {
     @State private var mostrarCompartir = false
     @State private var generandoPDF = false
     @State private var urlPDF: URL?
+    @State private var errorCompartir: String?
 
     var body: some View {
         List {
@@ -130,9 +131,18 @@ struct PlanDetailView: View {
         }
         .background {
             if let plan, mostrarCompartirICloud {
-                CloudSharingView(isPresented: $mostrarCompartirICloud, plan: plan)
+                CloudSharingView(isPresented: $mostrarCompartirICloud, plan: plan,
+                                 onError: { errorCompartir = $0 })
                     .frame(width: 0, height: 0)
             }
+        }
+        .alert("Error sharing", isPresented: .init(
+            get: { errorCompartir != nil },
+            set: { if !$0 { errorCompartir = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(errorCompartir ?? "")
         }
         .sheet(isPresented: $mostrarEditarPlan) {
             if let plan { PlanFormView(plan: plan) }

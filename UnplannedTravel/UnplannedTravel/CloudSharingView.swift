@@ -8,10 +8,11 @@ import UIKit
 struct CloudSharingView: UIViewControllerRepresentable {
     @Binding var isPresented: Bool
     let plan: Plan
+    var onError: ((String) -> Void)? = nil
     @Environment(CloudKitStore.self) var store
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(store: store, plan: plan, setPresented: { isPresented = $0 })
+        Coordinator(store: store, plan: plan, setPresented: { isPresented = $0 }, onError: onError)
     }
 
     func makeUIViewController(context: Context) -> UIViewController { UIViewController() }
@@ -51,7 +52,8 @@ struct CloudSharingView: UIViewControllerRepresentable {
 
                     topVC.present(csc, animated: true)
                 } catch {
-                    print("[CloudKit] Error preparando share: \(error.localizedDescription)")
+                    print("[CloudKit] ❌ Error preparando share: \(error)")
+                    coordinator.onError?(error.localizedDescription)
                     coordinator.close()
                 }
             }
@@ -86,12 +88,15 @@ struct CloudSharingView: UIViewControllerRepresentable {
         var store: CloudKitStore
         let plan: Plan
         private let setPresented: (Bool) -> Void
+        let onError: ((String) -> Void)?
         var presented = false
+        var errorMessage: String?
 
-        init(store: CloudKitStore, plan: Plan, setPresented: @escaping (Bool) -> Void) {
+        init(store: CloudKitStore, plan: Plan, setPresented: @escaping (Bool) -> Void, onError: ((String) -> Void)?) {
             self.store = store
             self.plan = plan
             self.setPresented = setPresented
+            self.onError = onError
         }
 
         func close() {

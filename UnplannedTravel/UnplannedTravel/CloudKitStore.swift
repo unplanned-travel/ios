@@ -304,13 +304,38 @@ final class CloudKitStore {
         share[CKShare.SystemFieldKey.title] = (plan.titulo.isEmpty ? "Trip" : plan.titulo) as CKRecordValue
 
         let results = try await privateDB.modifyRecords(saving: [record, share], deleting: [])
-        let savedShare = results.saveResults.values.compactMap { try? $0.get() as? CKShare }.first ?? share
 
-        if let url = savedShare.url {
-            print("[CloudKit] Share creado — URL: \(url)")
-        } else {
-            print("[CloudKit] ⚠️ Share guardado pero sin URL — el enlace no será válido")
+        // Check the share save result explicitly — partial failures don't throw.
+        if let shareResult = results.saveResults[share.recordID] {
+            switch shareResult {
+            case .failure(let error):
+                print("[CloudKit] ❌ Share save failed: \(error)")
+                throw error
+            case .success:
+                break
+            }
         }
+        if let recordResult = results.saveResults[record.recordID] {
+            switch recordResult {
+            case .failure(let error):
+                print("[CloudKit] ❌ Record save failed: \(error)")
+                throw error
+            case .success:
+                break
+            }
+        }
+
+        guard let shareResult = results.saveResults[share.recordID],
+              let savedShare = try? shareResult.get() as? CKShare else {
+            throw NSError(domain: "CloudKitStore", code: 2,
+                         userInfo: [NSLocalizedDescriptionKey: "Share not returned by server"])
+        }
+
+        guard let url = savedShare.url else {
+            throw NSError(domain: "CloudKitStore", code: 3,
+                         userInfo: [NSLocalizedDescriptionKey: "Share saved but has no URL — check CloudKit Dashboard schema"])
+        }
+        print("[CloudKit] ✅ Share creado — URL: \(url)")
 
         // Store the server-returned Plan record so record.share reference is set correctly.
         if let savedRecord = try? results.saveResults[record.recordID]?.get() {
