@@ -137,7 +137,9 @@ struct ShareManagementView: View {
                 participanteRow(p)
                     .deleteDisabled(!esPropietario || p.role == .owner)
             }
-            .onDelete(perform: esPropietario ? eliminarParticipantes : nil)
+            .onDelete { offsets in
+                if esPropietario { eliminarParticipantes(offsets) }
+            }
 
             if esPropietario {
                 Button {

@@ -432,6 +432,7 @@ final class CloudKitStore: ObservableObject {
     }
 
 
+    func prepararShare(para plan: Plan) async throws -> (CKRecord, CKShare) {
         guard let record = planRecords[plan.id] else {
             throw NSError(domain: "CloudKitStore", code: 1,
                          userInfo: [NSLocalizedDescriptionKey: "Record not found in local cache"])
