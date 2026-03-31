@@ -28,29 +28,50 @@ struct CloudSharingView: UIViewControllerRepresentable {
                     coordinator.close(); return
                 }
                 do {
-                    let csc: UICloudSharingController
                     if coordinator.store.tieneShareLocal(plan: plan),
                        let (share, container) = try await coordinator.store.fetchShareExistente(para: plan) {
-                        csc = UICloudSharingController(share: share, container: container)
+                        // Existing share — show management UI (CSC)
+                        let csc = UICloudSharingController(share: share, container: container)
+                        csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
+                        csc.delegate = coordinator
+
+                        let observer = DismissObserverVC { [weak coordinator] in
+                            coordinator?.close()
+                        }
+                        csc.addChild(observer)
+                        observer.view.frame = .zero
+                        csc.view.addSubview(observer.view)
+                        observer.didMove(toParent: csc)
+
+                        topVC.present(csc, animated: true)
                     } else {
+                        // New share — create it and show activity VC so the link is immediately copyable.
                         let (share, container) = try await coordinator.store.crearNuevoShare(para: plan)
-                        csc = UICloudSharingController(share: share, container: container)
-                    }
-                    csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
-                    csc.delegate = coordinator
 
-                    // Embed a zero-size child observer that fires close() whenever
-                    // the CSC disappears — covers Done button (programmatic dismiss),
-                    // swipe-to-dismiss, and any other dismissal path.
-                    let observer = DismissObserverVC { [weak coordinator] in
-                        coordinator?.close()
-                    }
-                    csc.addChild(observer)
-                    observer.view.frame = .zero
-                    csc.view.addSubview(observer.view)
-                    observer.didMove(toParent: csc)
+                        guard let url = share.url else {
+                            throw NSError(domain: "CloudKitStore", code: 3,
+                                          userInfo: [NSLocalizedDescriptionKey: "Share sin URL tras guardarse"])
+                        }
 
-                    topVC.present(csc, animated: true)
+                        let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                        activityVC.completionWithItemsHandler = { [weak coordinator] _, _, _, _ in
+                            coordinator?.close()
+                        }
+                        if let popover = activityVC.popoverPresentationController {
+                            popover.sourceView = topVC.view
+                            popover.sourceRect = CGRect(x: topVC.view.bounds.midX,
+                                                        y: topVC.view.bounds.midY,
+                                                        width: 0, height: 0)
+                            popover.permittedArrowDirections = []
+                        }
+
+                        // Also set up CSC in background so the share is properly configured.
+                        let csc = UICloudSharingController(share: share, container: container)
+                        csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
+                        csc.delegate = coordinator
+
+                        topVC.present(activityVC, animated: true)
+                    }
                 } catch {
                     print("[CloudKit] ❌ Error preparando share: \(error)")
                     coordinator.onError?(error.localizedDescription)
