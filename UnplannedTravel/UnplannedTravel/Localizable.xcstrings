@@ -1248,6 +1248,83 @@
         }
       }
     },
+    "share.access.anyoneReadOnly" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cualquiera (solo lectura)" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Edonork (irakurketa soilik)" } }
+      }
+    },
+    "share.access.anyoneReadWrite" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cualquiera (lectura y escritura)" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Edonork (irakurketa eta idazketa)" } }
+      }
+    },
+    "share.access.invited" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Solo personas invitadas" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Gonbidatutako pertsonak bakarrik" } }
+      }
+    },
+    "share.access.label" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Acceso" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Sarbidea" } }
+      }
+    },
+    "share.addPeople.add" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Gehitu" } }
+      }
+    },
+    "share.addPeople.email" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Correo electrónico" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Helbide elektronikoa" } }
+      }
+    },
+    "share.addPeople.footer" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Introduce el correo electrónico de la cuenta iCloud de la persona." } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Sartu pertsonaren iCloud kontuaren helbide elektronikoa." } }
+      }
+    },
+    "share.permission.label" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Permiso" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Baimena" } }
+      }
+    },
+    "share.section.access" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Acceso" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Sarbidea" } }
+      }
+    },
+    "share.section.permission" : {
+      "localizations" : {
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Permiso" } },
+        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Baimena" } }
+      }
+    },
+    "share.addPeople" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir personas…"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pertsonak gehitu…"
+          }
+        }
+      }
+    },
     "share.alert.close" : {
       "localizations" : {
         "es" : {
@@ -1313,6 +1390,7 @@
       }
     },
     "share.cancel" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1329,6 +1407,7 @@
       }
     },
     "share.done" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1345,6 +1424,7 @@
       }
     },
     "share.error.title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1361,6 +1441,7 @@
       }
     },
     "share.participant.unknown" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1377,6 +1458,7 @@
       }
     },
     "share.role.owner" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1393,6 +1475,7 @@
       }
     },
     "share.role.readOnly" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1409,6 +1492,7 @@
       }
     },
     "share.role.readWrite" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1424,23 +1508,8 @@
         }
       }
     },
-    "share.addPeople" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Añadir personas…"
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pertsonak gehitu…"
-          }
-        }
-      }
-    },
     "share.section.link" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1457,6 +1526,7 @@
       }
     },
     "share.section.participants" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1473,6 +1543,7 @@
       }
     },
     "share.stopSharing" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1489,6 +1560,7 @@
       }
     },
     "share.stopSharing.confirm.message" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1505,6 +1577,7 @@
       }
     },
     "share.stopSharing.confirm.title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {

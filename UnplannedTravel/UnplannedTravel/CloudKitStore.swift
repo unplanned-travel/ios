@@ -396,7 +396,42 @@ final class CloudKitStore: ObservableObject {
         }
     }
 
-    func prepararShare(para plan: Plan) async throws -> (CKRecord, CKShare) {
+    // MARK: - Share participant management
+
+    func agregarParticipante(email: String, permiso: CKShare.Participant.Permission, a share: CKShare) async throws -> CKShare {
+        let participante: CKShare.Participant = try await withCheckedThrowingContinuation { cont in
+            ckContainer.fetchShareParticipant(withEmailAddress: email) { p, error in
+                if let error { cont.resume(throwing: error) }
+                else if let p { cont.resume(returning: p) }
+                else { cont.resume(throwing: CKError(.internalError)) }
+            }
+        }
+        participante.permission = permiso
+        share.addParticipant(participante)
+        return try await guardarShare(share)
+    }
+
+    func eliminarParticipante(_ participante: CKShare.Participant, de share: CKShare) async throws -> CKShare {
+        share.removeParticipant(participante)
+        return try await guardarShare(share)
+    }
+
+    func actualizarAccesoPublico(_ permiso: CKShare.Participant.Permission, en share: CKShare) async throws -> CKShare {
+        share.publicPermission = permiso
+        return try await guardarShare(share)
+    }
+
+    private func guardarShare(_ share: CKShare) async throws -> CKShare {
+        let results = try await privateDB.modifyRecords(saving: [share], deleting: [])
+        guard let result = results.saveResults[share.recordID],
+              let saved = try? result.get() as? CKShare else {
+            throw NSError(domain: "CloudKitStore", code: 4,
+                         userInfo: [NSLocalizedDescriptionKey: "Failed to save share"])
+        }
+        return saved
+    }
+
+
         guard let record = planRecords[plan.id] else {
             throw NSError(domain: "CloudKitStore", code: 1,
                          userInfo: [NSLocalizedDescriptionKey: "Record not found in local cache"])

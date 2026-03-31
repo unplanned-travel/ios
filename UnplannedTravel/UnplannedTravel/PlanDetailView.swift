@@ -40,15 +40,7 @@ struct PlanDetailView: View {
             }
             .sheet(item: $shareActivo) { presentation in
                 if let p = plan {
-                    DirectSharingView(
-                        plan: p,
-                        share: presentation.share,
-                        container: store.ckContainer,
-                        onDismiss: { shareActivo = nil },
-                        onStopSharing: {
-                            Task { await store.actualizarTrasDetenerShare(para: p) }
-                        }
-                    )
+                    ShareManagementView(plan: p, share: presentation.share)
                 }
             }
             .sheet(isPresented: $mostrarEditarPlan) {
