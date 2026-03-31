@@ -82,6 +82,19 @@ struct PlanesView: View {
                 }
             }
         }
+        .task {
+            // Handle share metadata that arrived before the view was ready
+            // (e.g. app was cold-launched via a share link).
+            if let delegate = UIApplication.shared.delegate as? AppDelegate,
+               let metadata = delegate.pendingShareMetadata {
+                delegate.pendingShareMetadata = nil
+                do {
+                    try await store.aceptarShare(metadata: metadata)
+                } catch {
+                    errorImport = error.localizedDescription
+                }
+            }
+        }
         .alert("Error accepting invitation", isPresented: .init(
             get: { errorImport != nil },
             set: { if !$0 { errorImport = nil } }

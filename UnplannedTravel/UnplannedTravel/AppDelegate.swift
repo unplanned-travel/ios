@@ -3,6 +3,9 @@ import CloudKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 
+    /// Pending share metadata received before the UI was ready to handle it.
+    var pendingShareMetadata: CKShare.Metadata?
+
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
@@ -25,11 +28,12 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         }
     }
 
-    /// Called when the user accepts a CloudKit share invitation.
+    /// Called when the user accepts a CloudKit share invitation (taps the share link).
     func application(
         _ application: UIApplication,
         userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShare.Metadata
     ) {
+        pendingShareMetadata = cloudKitShareMetadata
         NotificationCenter.default.post(name: .cloudKitShareAccepted, object: cloudKitShareMetadata)
     }
 }
