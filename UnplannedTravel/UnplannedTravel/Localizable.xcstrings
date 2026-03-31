@@ -34,6 +34,7 @@
       }
     },
     "Add the first stage with the + button" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -50,6 +51,7 @@
       }
     },
     "Add your first trip with the + button" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -813,6 +815,7 @@
       }
     },
     "iCloud Required" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -915,6 +918,7 @@
       }
     },
     "No plans" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -931,6 +935,7 @@
       }
     },
     "No stages" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -1239,6 +1244,294 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hautatutako kokapena"
+          }
+        }
+      }
+    },
+    "share.alert.close" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Itxi"
+          }
+        }
+      }
+    },
+    "share.alert.copy" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copiar enlace"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopiatu esteka"
+          }
+        }
+      }
+    },
+    "share.alert.manage" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestionar acceso"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kudeatu sarbidea"
+          }
+        }
+      }
+    },
+    "share.alert.title" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlace para compartir"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partekatzeko esteka"
+          }
+        }
+      }
+    },
+    "share.cancel" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utzi"
+          }
+        }
+      }
+    },
+    "share.done" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hecho"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Egina"
+          }
+        }
+      }
+    },
+    "share.error.title" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error al compartir"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partekatzeko errorea"
+          }
+        }
+      }
+    },
+    "share.participant.unknown" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuario"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erabiltzailea"
+          }
+        }
+      }
+    },
+    "share.role.owner" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Propietario"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jabea"
+          }
+        }
+      }
+    },
+    "share.role.readOnly" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solo lectura"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Irakurtzeko soilik"
+          }
+        }
+      }
+    },
+    "share.role.readWrite" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puede editar"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editatu dezake"
+          }
+        }
+      }
+    },
+    "share.addPeople" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añadir personas…"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pertsonak gehitu…"
+          }
+        }
+      }
+    },
+    "share.section.link" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlace"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esteka"
+          }
+        }
+      }
+    },
+    "share.section.participants" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Participantes"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parte-hartzaileak"
+          }
+        }
+      }
+    },
+    "share.stopSharing" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dejar de compartir"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utzi partekatzeari"
+          }
+        }
+      }
+    },
+    "share.stopSharing.confirm.message" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se eliminará el acceso para todos los participantes."
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parte-hartzaile guztien sarbidea ezabatuko da."
+          }
+        }
+      }
+    },
+    "share.stopSharing.confirm.title" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Dejar de compartir?"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utzi partekatzeari?"
+          }
+        }
+      }
+    },
+    "share.title" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compartir viaje"
+          }
+        },
+        "eu" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partekatu bidaia"
           }
         }
       }
@@ -1918,108 +2211,6 @@
             "value" : "Webgunea"
           }
         }
-      }
-    },
-    "share.alert.close" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cerrar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Itxi" } }
-      }
-    },
-    "share.alert.copy" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Copiar enlace" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Kopiatu esteka" } }
-      }
-    },
-    "share.alert.manage" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Gestionar acceso" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Kudeatu sarbidea" } }
-      }
-    },
-    "share.alert.title" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Enlace para compartir" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Partekatzeko esteka" } }
-      }
-    },
-    "share.cancel" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Cancelar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Utzi" } }
-      }
-    },
-    "share.done" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Hecho" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Egina" } }
-      }
-    },
-    "share.error.title" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Error al compartir" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Partekatzeko errorea" } }
-      }
-    },
-    "share.participant.unknown" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Usuario" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Erabiltzailea" } }
-      }
-    },
-    "share.role.owner" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Propietario" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Jabea" } }
-      }
-    },
-    "share.role.readOnly" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Solo lectura" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Irakurtzeko soilik" } }
-      }
-    },
-    "share.role.readWrite" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Puede editar" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Editatu dezake" } }
-      }
-    },
-    "share.section.link" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Enlace" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Esteka" } }
-      }
-    },
-    "share.section.participants" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Participantes" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Parte-hartzaileak" } }
-      }
-    },
-    "share.stopSharing" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Dejar de compartir" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Utzi partekatzeari" } }
-      }
-    },
-    "share.stopSharing.confirm.message" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Se eliminará el acceso para todos los participantes." } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Parte-hartzaile guztien sarbidea ezabatuko da." } }
-      }
-    },
-    "share.stopSharing.confirm.title" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Dejar de compartir?" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Utzi partekatzeari?" } }
-      }
-    },
-    "share.title" : {
-      "localizations" : {
-        "es" : { "stringUnit" : { "state" : "translated", "value" : "Compartir viaje" } },
-        "eu" : { "stringUnit" : { "state" : "translated", "value" : "Partekatu bidaia" } }
       }
     },
     "With dates" : {

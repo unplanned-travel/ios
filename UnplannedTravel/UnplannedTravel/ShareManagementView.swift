@@ -16,6 +16,7 @@ struct ShareManagementView: View {
     @State private var confirmarDetener = false
     @State private var deteniendo = false
     @State private var errorDetener: String?
+    @State private var mostrarGestorNativo = false
 
     private var esPropietario: Bool {
         share.currentUserParticipant?.role == .owner
@@ -60,8 +61,17 @@ struct ShareManagementView: View {
             } message: {
                 Text(errorDetener ?? "")
             }
+            .background(
+                NativeShareManagerView(
+                    isPresented: $mostrarGestorNativo,
+                    share: share,
+                    container: store.ckContainer
+                )
+            )
         }
     }
+
+    // MARK: - Sections
 
     @ViewBuilder private var linkSection: some View {
         if let url = share.url {
@@ -90,12 +100,19 @@ struct ShareManagementView: View {
 
     @ViewBuilder private var participantsSection: some View {
         let participants = share.participants.filter { $0.acceptanceStatus != .removed }
-        if !participants.isEmpty {
-            Section(String(localized: "share.section.participants")) {
-                ForEach(participants, id: \.userIdentity.userRecordID?.recordName) { p in
-                    participantRow(p)
+        Section {
+            ForEach(participants, id: \.userIdentity.userRecordID?.recordName) { p in
+                participantRow(p)
+            }
+            if esPropietario {
+                Button {
+                    mostrarGestorNativo = true
+                } label: {
+                    Label(String(localized: "share.addPeople"), systemImage: "person.badge.plus")
                 }
             }
+        } header: {
+            Text(String(localized: "share.section.participants"))
         }
     }
 
@@ -146,5 +163,56 @@ struct ShareManagementView: View {
             default:         return String(localized: "share.role.readOnly")
             }
         }
+    }
+}
+
+// MARK: - Native UICloudSharingController presenter
+
+private struct NativeShareManagerView: UIViewControllerRepresentable {
+    @Binding var isPresented: Bool
+    let share: CKShare
+    let container: CKContainer
+
+    func makeUIViewController(context: Context) -> UIViewController { UIViewController() }
+
+    func updateUIViewController(_ vc: UIViewController, context: Context) {
+        guard isPresented, !context.coordinator.presented else { return }
+        context.coordinator.presented = true
+
+        guard let topVC = topViewController() else { isPresented = false; return }
+        let csc = UICloudSharingController(share: share, container: container)
+        csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
+        csc.delegate = context.coordinator
+        topVC.present(csc, animated: true)
+    }
+
+    func makeCoordinator() -> Coordinator { Coordinator { isPresented = $0 } }
+
+    final class Coordinator: NSObject, UICloudSharingControllerDelegate {
+        var presented = false
+        private let setPresented: (Bool) -> Void
+        init(_ setPresented: @escaping (Bool) -> Void) { self.setPresented = setPresented }
+
+        func itemTitle(for csc: UICloudSharingController) -> String? { nil }
+
+        func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
+            presented = false; setPresented(false)
+        }
+        func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
+            presented = false; setPresented(false)
+        }
+        func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
+            presented = false; setPresented(false)
+        }
+    }
+
+    private func topViewController() -> UIViewController? {
+        guard let root = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .flatMap({ $0.windows })
+            .first(where: { $0.isKeyWindow })?.rootViewController else { return nil }
+        var top = root
+        while let presented = top.presentedViewController { top = presented }
+        return top
     }
 }
