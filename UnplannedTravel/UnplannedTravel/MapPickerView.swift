@@ -2,18 +2,24 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
+// Wrapper to make selected MKMapItem usable as an annotation item.
+private struct SelectedMapItem: Identifiable {
+    let id = UUID()
+    let item: MKMapItem
+    var coordinate: CLLocationCoordinate2D { item.placemark.coordinate }
+}
+
 struct MapPickerView: View {
     @Binding var direccion: Direccion
     @Environment(\.dismiss) private var dismiss
 
-    @State private var position: MapCameraPosition
+    @State private var region: MKCoordinateRegion
     @State private var searchText = ""
     @State private var suggestions: [MKMapItem] = []
     @State private var selectedItem: MKMapItem?
     @State private var searchTask: Task<Void, Never>?
-    @State private var featureSeleccionada: MapFeature?
     @State private var buscandoPOI = false
-    @State private var radioActual: Double = 400   // tracks live camera radius (meters)
+    @State private var radioActual: Double = 400
     @StateObject private var locationManager = LocationManager()
 
     private static let radioDefecto: Double = 400
@@ -23,58 +29,64 @@ struct MapPickerView: View {
         let d = direccion.wrappedValue
         if let lat = d.latitud, let lon = d.longitud {
             let radio = d.radioMetros ?? MapPickerView.radioDefecto
-            _position = State(initialValue: .region(MKCoordinateRegion(
+            _region = State(initialValue: MKCoordinateRegion(
                 center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
                 latitudinalMeters: radio,
                 longitudinalMeters: radio
-            )))
+            ))
             _radioActual = State(initialValue: radio)
         } else {
-            _position = State(initialValue: .automatic)
+            _region = State(initialValue: MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                latitudinalMeters: 400,
+                longitudinalMeters: 400
+            ))
         }
+    }
+
+    private var annotationItems: [SelectedMapItem] {
+        guard let item = selectedItem else { return [] }
+        return [SelectedMapItem(item: item)]
     }
 
     var body: some View {
         NavigationStack {
-            Map(position: $position, selection: $featureSeleccionada) {
-                UserAnnotation()
-                if let item = selectedItem {
-                    Marker(item: item)
-                        .tint(.red)
-                }
+            Map(coordinateRegion: $region,
+                showsUserLocation: true,
+                annotationItems: annotationItems) { wrapper in
+                MapMarker(coordinate: wrapper.coordinate, tint: .red)
             }
-            .mapStyle(.standard(pointsOfInterest: .all))
-            .mapControls {
-                MapUserLocationButton()
-                MapCompass()
-                MapScaleView()
+            .onChange(of: region) { newRegion in
+                radioActual = newRegion.span.latitudeDelta * 111_000
             }
             .task {
-                // If the direccion already has a saved location, restore the marker.
                 if let lat = direccion.latitud, let lon = direccion.longitud {
-                    let location = CLLocation(latitude: lat, longitude: lon)
-                    let item = MKMapItem(location: location, address: nil)
+                    let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon))
+                    let item = MKMapItem(placemark: placemark)
                     item.name = direccion.descripcion.isEmpty ? direccion.ciudad : direccion.descripcion
                     selectedItem = item
                     searchText = item.name ?? ""
                 } else {
-                    // No saved location: center on user position.
                     locationManager.requestLocation { coordinate in
-                        position = .region(MKCoordinateRegion(
+                        region = MKCoordinateRegion(
                             center: coordinate,
                             latitudinalMeters: 400,
                             longitudinalMeters: 400
-                        ))
+                        )
                     }
                 }
             }
-            .onChange(of: featureSeleccionada) { _, feature in
-                guard let feature else { return }
-                resolverFeature(feature)
-            }
-            .onMapCameraChange(frequency: .onEnd) { context in
-                // latitudeDelta * 111_000 ≈ vertical meters visible; use as radius
-                radioActual = context.region.span.latitudeDelta * 111_000
+            .onChange(of: searchText) { nuevo in
+                searchTask?.cancel()
+                if nuevo.count >= 2 {
+                    searchTask = Task {
+                        try? await Task.sleep(for: .milliseconds(300))
+                        guard !Task.isCancelled else { return }
+                        buscar(nuevo)
+                    }
+                } else if nuevo.isEmpty {
+                    suggestions = []
+                }
             }
             .searchable(
                 text: $searchText,
@@ -91,8 +103,8 @@ struct MapPickerView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(item.name ?? "")
                                     .foregroundStyle(.primary)
-                                if let subtitulo = item.address?.shortAddress ?? item.address?.fullAddress,
-                                   subtitulo != item.name {
+                                let subtitulo = shortAddress(for: item.placemark)
+                                if !subtitulo.isEmpty && subtitulo != item.name {
                                     Text(subtitulo)
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
@@ -103,18 +115,6 @@ struct MapPickerView: View {
                 }
             }
             .onSubmit(of: .search) { buscar(searchText) }
-            .onChange(of: searchText) { _, nuevo in
-                searchTask?.cancel()
-                if nuevo.count >= 2 {
-                    searchTask = Task {
-                        try? await Task.sleep(for: .milliseconds(300))
-                        guard !Task.isCancelled else { return }
-                        buscar(nuevo)
-                    }
-                } else if nuevo.isEmpty {
-                    suggestions = []
-                }
-            }
             .safeAreaInset(edge: .bottom) {
                 if buscandoPOI {
                     ProgressView()
@@ -128,8 +128,8 @@ struct MapPickerView: View {
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
-            .animation(.spring(duration: 0.3), value: selectedItem?.name)
-            .animation(.spring(duration: 0.2), value: buscandoPOI)
+            .animation(.spring(response: 0.3, dampingFraction: 0.8), value: selectedItem?.name)
+            .animation(.spring(response: 0.2, dampingFraction: 0.9), value: buscandoPOI)
             .navigationTitle("Select location")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -138,47 +138,6 @@ struct MapPickerView: View {
                 }
             }
         }
-    }
-
-    // MARK: - POI tap resolution
-
-    /// Converts a tapped MapFeature to an MKMapItem via local search.
-    private func resolverFeature(_ feature: MapFeature) {
-        buscandoPOI = true
-        selectedItem = nil
-
-        Task {
-            let request = MKLocalSearch.Request()
-            request.naturalLanguageQuery = feature.title
-            request.region = MKCoordinateRegion(
-                center: feature.coordinate,
-                latitudinalMeters: 150,
-                longitudinalMeters: 150
-            )
-            request.resultTypes = .pointOfInterest
-
-            if let response = try? await MKLocalSearch(request: request).start(),
-               let match = response.mapItems.min(by: {
-                   distancia($0.location.coordinate, feature.coordinate) <
-                   distancia($1.location.coordinate, feature.coordinate)
-               }) {
-                seleccionar(match)
-            } else {
-                // Fallback: build a minimal item from the feature itself
-                let location = CLLocation(latitude: feature.coordinate.latitude,
-                                         longitude: feature.coordinate.longitude)
-                let item = MKMapItem(location: location, address: nil)
-                item.name = feature.title
-                seleccionar(item)
-            }
-            buscandoPOI = false
-        }
-    }
-
-    private func distancia(_ a: CLLocationCoordinate2D, _ b: CLLocationCoordinate2D) -> Double {
-        let la = CLLocation(latitude: a.latitude, longitude: a.longitude)
-        let lb = CLLocation(latitude: b.latitude, longitude: b.longitude)
-        return la.distance(from: lb)
     }
 
     // MARK: - Search
@@ -201,28 +160,27 @@ struct MapPickerView: View {
 
     private func seleccionar(_ item: MKMapItem) {
         selectedItem = item
-        featureSeleccionada = nil
         searchText = item.name ?? ""
         suggestions = []
-        let coord = item.location.coordinate
-        position = .region(MKCoordinateRegion(
+        let coord = item.placemark.coordinate
+        region = MKCoordinateRegion(
             center: coord,
             latitudinalMeters: 500,
             longitudinalMeters: 500
-        ))
+        )
     }
 
     private func aplicar() {
         guard let item = selectedItem else { return }
-        let addr = item.address
-        let repr = item.addressRepresentations
+        let placemark = item.placemark
         direccion.descripcion = item.name ?? ""
-        direccion.direccionCompleta = addr?.fullAddress
-            ?? repr?.fullAddress(includingRegion: true, singleLine: true)
-            ?? ""
-        direccion.ciudad = repr?.cityName ?? ""
-        direccion.pais = repr?.regionName ?? ""
-        let coord = item.location.coordinate
+        let parts = [placemark.thoroughfare, placemark.locality,
+                     placemark.administrativeArea, placemark.country]
+            .compactMap { $0 }.filter { !$0.isEmpty }
+        direccion.direccionCompleta = parts.joined(separator: ", ")
+        direccion.ciudad = placemark.locality ?? placemark.administrativeArea ?? ""
+        direccion.pais = placemark.country ?? ""
+        let coord = placemark.coordinate
         direccion.latitud = coord.latitude
         direccion.longitud = coord.longitude
         direccion.radioMetros = radioActual
@@ -234,7 +192,6 @@ struct MapPickerView: View {
     @ViewBuilder
     private func tarjetaItem(_ item: MKMapItem) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Header
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: icono(para: item))
                     .font(.title2)
@@ -245,9 +202,7 @@ struct MapPickerView: View {
                     Text(item.name ?? "Selected location")
                         .font(.headline)
 
-                    let subtitulo = item.address?.shortAddress
-                        ?? item.addressRepresentations?.cityWithContext
-                        ?? ""
+                    let subtitulo = shortAddress(for: item.placemark)
                     if !subtitulo.isEmpty {
                         Text(subtitulo)
                             .font(.subheadline)
@@ -255,17 +210,14 @@ struct MapPickerView: View {
                     }
                 }
                 Spacer()
-                // Deselect
                 Button {
                     selectedItem = nil
-                    featureSeleccionada = nil
                 } label: {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(.secondary)
                 }
             }
 
-            // Extra info
             if let phone = item.phoneNumber, !phone.isEmpty {
                 Label(phone, systemImage: "phone")
                     .font(.caption)
@@ -278,7 +230,6 @@ struct MapPickerView: View {
                     .lineLimit(1)
             }
 
-            // Action button
             Button(action: aplicar) {
                 Label("Use this location", systemImage: "checkmark.circle.fill")
                     .frame(maxWidth: .infinity)
@@ -294,6 +245,11 @@ struct MapPickerView: View {
     }
 
     // MARK: - Helpers
+
+    private func shortAddress(for placemark: MKPlacemark) -> String {
+        [placemark.thoroughfare, placemark.locality]
+            .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", ")
+    }
 
     private func icono(para item: MKMapItem) -> String {
         switch item.pointOfInterestCategory {

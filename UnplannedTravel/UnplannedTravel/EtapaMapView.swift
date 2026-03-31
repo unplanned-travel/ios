@@ -5,31 +5,31 @@ struct EtapaMapView: View {
     let etapa: Etapa
     @Environment(\.dismiss) private var dismiss
 
+    @State private var region: MKCoordinateRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+        latitudinalMeters: 400,
+        longitudinalMeters: 400
+    )
+
     var body: some View {
         NavigationStack {
-            Map(initialPosition: camaraInicial) {
-                ForEach(anotaciones) { punto in
-                    Annotation(punto.nombre, coordinate: punto.coordenada, anchor: .bottom) {
-                        VStack(spacing: 0) {
-                            Image(systemName: etapa.tipo.icono)
-                                .foregroundStyle(.white)
-                                .padding(10)
-                                .background(Color.accentColor)
-                                .clipShape(Circle())
-                                .shadow(radius: 3)
-                            Image(systemName: "triangle.fill")
-                                .font(.system(size: 8))
-                                .foregroundStyle(Color.accentColor)
-                                .offset(y: -2)
-                        }
+            Map(coordinateRegion: $region, annotationItems: anotaciones) { punto in
+                MapAnnotation(coordinate: punto.coordenada) {
+                    VStack(spacing: 0) {
+                        Image(systemName: etapa.tipo.icono)
+                            .foregroundStyle(.white)
+                            .padding(10)
+                            .background(Color.accentColor)
+                            .clipShape(Circle())
+                            .shadow(radius: 3)
+                        Image(systemName: "triangle.fill")
+                            .font(.system(size: 8))
+                            .foregroundStyle(Color.accentColor)
+                            .offset(y: -2)
                     }
                 }
             }
-            .mapStyle(.standard(pointsOfInterest: .all))
-            .mapControls {
-                MapCompass()
-                MapScaleView()
-            }
+            .onAppear { region = regionInicial }
             .navigationTitle(etapa.etiqueta)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -124,15 +124,21 @@ struct EtapaMapView: View {
 
     private static let radioDefecto: Double = 400
 
-    private var camaraInicial: MapCameraPosition {
-        guard !anotaciones.isEmpty else { return .automatic }
+    private var regionInicial: MKCoordinateRegion {
+        guard !anotaciones.isEmpty else {
+            return MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                latitudinalMeters: 400,
+                longitudinalMeters: 400
+            )
+        }
         if anotaciones.count == 1, let p = anotaciones.first {
             let radio = p.radioMetros ?? Self.radioDefecto
-            return .region(MKCoordinateRegion(
+            return MKCoordinateRegion(
                 center: p.coordenada,
                 latitudinalMeters: radio,
                 longitudinalMeters: radio
-            ))
+            )
         }
         let lats = anotaciones.map(\.coordenada.latitude)
         let lons = anotaciones.map(\.coordenada.longitude)
@@ -144,16 +150,15 @@ struct EtapaMapView: View {
             latitudeDelta: (lats.max()! - lats.min()!) * 1.6 + 0.02,
             longitudeDelta: (lons.max()! - lons.min()!) * 1.6 + 0.02
         )
-        return .region(MKCoordinateRegion(center: centro, span: span))
+        return MKCoordinateRegion(center: centro, span: span)
     }
 
     // MARK: - Apple Maps
 
     private func abrirEnMapas() {
         let items = anotaciones.map { punto -> MKMapItem in
-            let location = CLLocation(latitude: punto.coordenada.latitude,
-                                      longitude: punto.coordenada.longitude)
-            let item = MKMapItem(location: location, address: nil)
+            let placemark = MKPlacemark(coordinate: punto.coordenada)
+            let item = MKMapItem(placemark: placemark)
             item.name = punto.nombre
             return item
         }
