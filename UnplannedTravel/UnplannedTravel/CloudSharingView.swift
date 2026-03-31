@@ -42,9 +42,6 @@ struct CloudSharingView: UIViewControllerRepresentable {
                     csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
                     csc.delegate = coordinator
 
-                    // Embed a zero-size child observer that fires close() whenever
-                    // the CSC disappears — covers Done button (programmatic dismiss),
-                    // swipe-to-dismiss, and any other dismissal path.
                     let observer = DismissObserverVC { [weak coordinator] in
                         coordinator?.close()
                     }
@@ -53,7 +50,37 @@ struct CloudSharingView: UIViewControllerRepresentable {
                     csc.view.addSubview(observer.view)
                     observer.didMove(toParent: csc)
 
-                    topVC.present(csc, animated: true)
+                    if let url = share.url {
+                        // UICloudSharingController doesn't display the URL directly —
+                        // show an alert first so the user can copy the link immediately.
+                        let alert = UIAlertController(
+                            title: NSLocalizedString("share.alert.title", comment: ""),
+                            message: url.absoluteString,
+                            preferredStyle: .alert
+                        )
+                        alert.addAction(UIAlertAction(
+                            title: NSLocalizedString("share.alert.copy", comment: ""),
+                            style: .default
+                        ) { [weak coordinator] _ in
+                            UIPasteboard.general.url = url
+                            coordinator?.close()
+                        })
+                        alert.addAction(UIAlertAction(
+                            title: NSLocalizedString("share.alert.manage", comment: ""),
+                            style: .default
+                        ) { [weak topVC] _ in
+                            topVC?.present(csc, animated: true)
+                        })
+                        alert.addAction(UIAlertAction(
+                            title: NSLocalizedString("share.alert.close", comment: ""),
+                            style: .cancel
+                        ) { [weak coordinator] _ in
+                            coordinator?.close()
+                        })
+                        topVC.present(alert, animated: true)
+                    } else {
+                        topVC.present(csc, animated: true)
+                    }
                 } catch {
                     print("[CloudKit] ❌ Error preparando share: \(error)")
                     coordinator.onError?(error.localizedDescription)

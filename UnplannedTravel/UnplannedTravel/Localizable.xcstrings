@@ -1920,6 +1920,46 @@
         }
       }
     },
+    "share.alert.close" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : { "state" : "translated", "value" : "Cerrar" }
+        },
+        "eu" : {
+          "stringUnit" : { "state" : "translated", "value" : "Itxi" }
+        }
+      }
+    },
+    "share.alert.copy" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : { "state" : "translated", "value" : "Copiar enlace" }
+        },
+        "eu" : {
+          "stringUnit" : { "state" : "translated", "value" : "Kopiatu esteka" }
+        }
+      }
+    },
+    "share.alert.manage" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : { "state" : "translated", "value" : "Gestionar acceso" }
+        },
+        "eu" : {
+          "stringUnit" : { "state" : "translated", "value" : "Kudeatu sarbidea" }
+        }
+      }
+    },
+    "share.alert.title" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : { "state" : "translated", "value" : "Enlace para compartir" }
+        },
+        "eu" : {
+          "stringUnit" : { "state" : "translated", "value" : "Partekatzeko esteka" }
+        }
+      }
+    },
     "With dates" : {
       "localizations" : {
         "es" : {
