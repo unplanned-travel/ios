@@ -115,7 +115,12 @@ struct CloudSharingView: UIViewControllerRepresentable {
         }
 
         func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) { close() }
-        func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) { close() }
+        func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
+            Task { @MainActor in
+                await store.actualizarTrasDetenerShare(para: plan)
+            }
+            close()
+        }
     }
 }
 

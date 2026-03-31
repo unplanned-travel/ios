@@ -370,6 +370,18 @@ final class CloudKitStore {
         planRecords[plan.id]?.share != nil
     }
 
+    /// Called after UICloudSharingController stops sharing — refreshes the record
+    /// from the server so the local cache reflects the removed share reference.
+    func actualizarTrasDetenerShare(para plan: Plan) async {
+        guard let cached = planRecords[plan.id] else { return }
+        if let fresh = try? await privateDB.record(for: cached.recordID) {
+            planRecords[plan.id] = fresh
+        }
+        if let idx = planes.firstIndex(where: { $0.id == plan.id }) {
+            planes[idx].estaCompartido = false
+        }
+    }
+
     func prepararShare(para plan: Plan) async throws -> (CKRecord, CKShare) {
         guard let record = planRecords[plan.id] else {
             throw NSError(domain: "CloudKitStore", code: 1,
