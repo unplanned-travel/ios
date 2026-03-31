@@ -39,7 +39,6 @@
     },
     "NSContactsUsageDescription" : {
       "comment" : "Contacts permission for iCloud sharing suggestions",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "en" : {
           "stringUnit" : {

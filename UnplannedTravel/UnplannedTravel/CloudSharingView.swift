@@ -40,6 +40,8 @@ struct CloudSharingView: UIViewControllerRepresentable {
                     csc.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
                     csc.delegate = coordinator
                     topVC.present(csc, animated: true)
+                    // Catch dismissal via "Done" which doesn't trigger any delegate method.
+                    csc.presentationController?.delegate = coordinator
                 } catch {
                     print("[CloudKit] Error preparando share: \(error.localizedDescription)")
                     coordinator.close()
@@ -50,7 +52,7 @@ struct CloudSharingView: UIViewControllerRepresentable {
 
     // MARK: - Coordinator
 
-    final class Coordinator: NSObject, UICloudSharingControllerDelegate {
+    final class Coordinator: NSObject, UICloudSharingControllerDelegate, UIAdaptivePresentationControllerDelegate {
         var store: CloudKitStore
         let plan: Plan
         private let setPresented: (Bool) -> Void
@@ -78,6 +80,11 @@ struct CloudSharingView: UIViewControllerRepresentable {
 
         func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) { close() }
         func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) { close() }
+
+        // Called when the user dismisses the sheet without making changes (e.g. "Done").
+        func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+            close()
+        }
     }
 }
 
